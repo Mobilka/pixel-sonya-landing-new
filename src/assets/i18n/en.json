@@ -1,0 +1,68 @@
+{
+  "HEADER": {
+    "TITLE": "Pixel Sonya"
+  },
+  "HERO": {
+    "TITLE": "Design Services",
+    "DESCRIPTION": "Creative design and development for your business and online projects. Professional solution for corporate identity, websites, and marketing materials creation. Individual approach to each client, transparent pricing, and quality-guaranteed work.",
+    "BUTTON": "Show Gallery"
+  },
+  "PRICING": {
+    "TITLE": "Popular",
+    "PRO": {
+      "TITLE": "Professional Package",
+      "PRICE": "₪1,350",
+      "FEATURES": {
+        "FEATURE1": "About 2 hours of shooting",
+        "FEATURE2": "About 200 photos",
+        "FEATURE3": "About 15 edited photos for each family member"
+      }
+    },
+    "BASIC": {
+      "TITLE": "Basic Package",
+      "PRICE": "₪1,150",
+      "FEATURES": {
+        "FEATURE1": "About 1.5 hours of shooting",
+        "FEATURE2": "About 150 photos",
+        "FEATURE3": "About 10 edited photos for each family member"
+      }
+    },
+    "LIGHT": {
+      "TITLE": "Children Package",
+      "PRICE": "₪650",
+      "FEATURES": {
+        "FEATURE1": "About 1 hour of shooting",
+        "FEATURE2": "About 100 photos",
+        "FEATURE3": "About 10 edited photos"
+      }
+    }
+  },
+  "CONTACT": {
+    "TITLE": "Leave a Request",
+    "DESCRIPTION": "Fill out the form and we'll get back to you as soon as possible",
+    "PREFERRED": "Preferred contact method:",
+    "FORM": {
+      "NAME": "Your name",
+      "PHONE": "Phone number",
+      "EMAIL": "Email",
+      "MESSAGE": "Describe your task or question",
+      "SUBMIT": "Submit"
+    },
+    "SUCCESS": "Thank you! Your request has been sent. We'll contact you soon."
+  },
+  "LOCATION": {
+    "TITLE": "How to Find Us",
+    "ADDRESS": "Address: Herzel 196, Rehovot, Israel"
+  },
+  "GALLERY": {
+    "TITLE": "Work Gallery"
+  },
+  "FOOTER": {
+    "COPYRIGHT": "© 2024 Pixel Sonya. All rights reserved."
+  },
+  "LANGUAGE": {
+    "HE": "Hebrew",
+    "EN": "English",
+    "RU": "Russian"
+  }
+} 

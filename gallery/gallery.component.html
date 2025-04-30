@@ -1,0 +1,23 @@
+<div class="gallery">
+  <h2 class="gallery__title">גלריית תמונות</h2>
+  <div class="gallery__grid">
+    <img
+      *ngFor="let img of images; let i = index"
+      [src]="img.src"
+      [alt]="img.alt"
+      (click)="openModal(img.src, img.alt)"
+      [style.animationDelay]="i * 0.12 + 's'"
+      class="gallery__img"
+    />
+  </div>
+
+  <div class="gallery__modal" *ngIf="modalOpen" (click)="closeModal()">
+    <img [src]="modalImg" [alt]="modalAlt" class="gallery__modal-img" />
+    <button
+      class="gallery__modal-close"
+      (click)="closeModal(); $event.stopPropagation()"
+    >
+      ×
+    </button>
+  </div>
+</div>
