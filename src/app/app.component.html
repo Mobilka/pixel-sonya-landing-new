@@ -1,59 +1,72 @@
-<!-- Главная страница -->
+<!-- Main page -->
 <div class="main-container">
-  <!-- Пиксельный фон -->
-  <div class="pixel-background">
-    <div *ngFor="let _ of [].constructor(144)"></div>
-  </div>
+  <!-- Pixel background removed -->
 
   <header>
     <nav>
-      <div class="logo">
-        <!-- Логотип без отладочных стилей -->
-        <img src="assets/logo.png" alt="Pixel Sonya" />
+      <!-- Left side - language switcher -->
+      <div class="nav-left">
+        <div class="language-switcher">
+          <button
+            [class.active]="currentLang === 'en'"
+            (click)="changeLanguage('en')"
+            class="lang-en"
+          >
+            EN
+          </button>
+          <button
+            [class.active]="currentLang === 'ru'"
+            (click)="changeLanguage('ru')"
+            class="lang-ru"
+          >
+            RU
+          </button>
+          <button
+            [class.active]="currentLang === 'he'"
+            (click)="changeLanguage('he')"
+            class="lang-he"
+          >
+            עב
+          </button>
+        </div>
       </div>
-      <!-- Переключатель языков -->
-      <div class="language-switcher">
-        <button
-          [class.active]="currentLang === 'he'"
-          (click)="changeLanguage('he')"
-        >
-          עב
-        </button>
-        <button
-          [class.active]="currentLang === 'en'"
-          (click)="changeLanguage('en')"
-        >
-          EN
-        </button>
-        <button
-          [class.active]="currentLang === 'ru'"
-          (click)="changeLanguage('ru')"
-        >
-          RU
-        </button>
+
+      <!-- Right side - logo -->
+      <div class="nav-right">
+        <div class="logo">
+          <!-- Logo without debug styles -->
+          <img src="assets/Pixel_Sonya_logo_wide.png" alt="Pixel Sonya" />
+        </div>
       </div>
     </nav>
   </header>
 
-  <!-- Галерея -->
+  <!-- Gallery -->
   <div class="gallery-overlay" *ngIf="isGalleryOpen">
     <div class="gallery-container">
       <button class="gallery-close" (click)="closeGallery()">×</button>
       <h2 class="gallery-title">{{ "GALLERY.TITLE" | translate }}</h2>
-      <div class="gallery-grid">
+
+      <!-- Using virtual scrolling for gallery -->
+      <cdk-virtual-scroll-viewport
+        class="gallery-grid"
+        itemSize="220"
+        minBufferPx="400"
+        maxBufferPx="800"
+      >
         <div
           class="gallery-item"
-          *ngFor="let img of galleryImages; let i = index"
+          *cdkVirtualFor="let img of galleryImages; let i = index"
           (click)="openImageModal(img.src, img.alt)"
           [style.animationDelay]="i * 0.05 + 's'"
         >
           <img [src]="img.src" [alt]="img.alt" />
         </div>
-      </div>
+      </cdk-virtual-scroll-viewport>
     </div>
   </div>
 
-  <!-- Модальное окно для просмотра фото -->
+  <!-- Modal window for photo viewing -->
   <div class="image-modal" *ngIf="selectedImage" (click)="closeImageModal()">
     <img [src]="selectedImage" [alt]="selectedImageAlt" class="modal-image" />
     <button
@@ -70,8 +83,8 @@
   </div>
 
   <div class="content-wrapper">
-    <!-- Слайд-шоу, занимающее левую треть страницы -->
-    <div class="slideshow-container">
+    <!-- Slideshow on desktop (left) and under hero on mobile -->
+    <section class="slideshow-container">
       <div class="slideshow">
         <div
           class="slide"
@@ -80,10 +93,12 @@
         >
           <img [src]="slide.image" [alt]="slide.alt" />
         </div>
+        <!-- Slide controls -->
         <div class="slide-controls">
           <button class="prev-btn" (click)="prevSlide()">&#10094;</button>
           <button class="next-btn" (click)="nextSlide()">&#10095;</button>
         </div>
+        <!-- Slide dots -->
         <div class="slide-dots">
           <span
             *ngFor="let slide of slides; let i = index"
@@ -93,10 +108,10 @@
           ></span>
         </div>
       </div>
-    </div>
+    </section>
 
     <main class="main-content">
-      <!-- Секция с описанием услуг -->
+      <!-- Services description section -->
       <section class="hero-section">
         <div class="hero-image">
           <img src="assets/Sonya.png" alt="Sonya" />
@@ -110,72 +125,74 @@
         </div>
       </section>
 
-      <!-- Секция с ценовыми планами -->
+      <!-- Pricing section -->
       <section class="pricing-section">
         <div class="pricing-container">
-          <!-- Расширенный пакет (Фиолетовый) -->
-          <div class="pricing-card purple">
-            <h3>{{ "PRICING.PRO.TITLE" | translate }}</h3>
-            <div class="price">{{ "PRICING.PRO.PRICE" | translate }}</div>
-            <ul class="features">
-              <li>{{ "PRICING.PRO.FEATURES.FEATURE1" | translate }}</li>
-              <li>{{ "PRICING.PRO.FEATURES.FEATURE2" | translate }}</li>
-              <li>{{ "PRICING.PRO.FEATURES.FEATURE3" | translate }}</li>
+          <!-- Light package (Yellow) -->
+          <div class="pricing-card yellow">
+            <h3>{{ "PRICING.LIGHT.TITLE" | translate }}</h3>
+            <div class="price">{{ "PRICING.LIGHT.PRICE" | translate }}</div>
+            <ul class="features" [dir]="currentLang === 'he' ? 'rtl' : 'ltr'">
+              <li>{{ "PRICING.LIGHT.FEATURES.FEATURE1" | translate }}</li>
+              <li>{{ "PRICING.LIGHT.FEATURES.FEATURE2" | translate }}</li>
+              <li>{{ "PRICING.LIGHT.FEATURES.FEATURE3" | translate }}</li>
             </ul>
           </div>
 
-          <!-- Базовый пакет (Персиковый) -->
+          <!-- Basic package (Peach) -->
           <div class="pricing-card peach featured">
             <div class="popular-badge">{{ "PRICING.TITLE" | translate }}</div>
             <h3>{{ "PRICING.BASIC.TITLE" | translate }}</h3>
             <div class="price">{{ "PRICING.BASIC.PRICE" | translate }}</div>
-            <ul class="features">
+            <ul class="features" [dir]="currentLang === 'he' ? 'rtl' : 'ltr'">
               <li>{{ "PRICING.BASIC.FEATURES.FEATURE1" | translate }}</li>
               <li>{{ "PRICING.BASIC.FEATURES.FEATURE2" | translate }}</li>
               <li>{{ "PRICING.BASIC.FEATURES.FEATURE3" | translate }}</li>
             </ul>
           </div>
 
-          <!-- Легкий пакет (Желтый) -->
-          <div class="pricing-card yellow">
-            <h3>{{ "PRICING.LIGHT.TITLE" | translate }}</h3>
-            <div class="price">{{ "PRICING.LIGHT.PRICE" | translate }}</div>
-            <ul class="features">
-              <li>{{ "PRICING.LIGHT.FEATURES.FEATURE1" | translate }}</li>
-              <li>{{ "PRICING.LIGHT.FEATURES.FEATURE2" | translate }}</li>
-              <li>{{ "PRICING.LIGHT.FEATURES.FEATURE3" | translate }}</li>
+          <!-- Premium package (Purple) -->
+          <div class="pricing-card purple">
+            <h3>{{ "PRICING.PRO.TITLE" | translate }}</h3>
+            <div class="price">{{ "PRICING.PRO.PRICE" | translate }}</div>
+            <ul class="features" [dir]="currentLang === 'he' ? 'rtl' : 'ltr'">
+              <li>{{ "PRICING.PRO.FEATURES.FEATURE1" | translate }}</li>
+              <li>{{ "PRICING.PRO.FEATURES.FEATURE2" | translate }}</li>
+              <li>{{ "PRICING.PRO.FEATURES.FEATURE3" | translate }}</li>
             </ul>
           </div>
         </div>
       </section>
 
-      <!-- Контактная форма -->
+      <!-- Contact form -->
       <section class="contact-section">
         <h2>{{ "CONTACT.TITLE" | translate }}</h2>
         <p>{{ "CONTACT.DESCRIPTION" | translate }}</p>
 
-        <!-- Контактные кнопки -->
+        <!-- Contact buttons -->
         <div class="contact-methods">
-          <span>{{ "CONTACT.PREFERRED" | translate }}</span>
           <div class="contact-options">
             <a
               class="contact-bubble email"
               [class.active]="formData.preferredContact === 'email'"
               (click)="setPreferredContact('email'); sendEmail()"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                fill="none"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
+              <div class="contact-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </div>
               <span class="contact-info">{{ contactInfo.email }}</span>
             </a>
             <a
@@ -183,20 +200,23 @@
               [class.active]="formData.preferredContact === 'phone'"
               (click)="setPreferredContact('phone'); callPhone()"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                fill="none"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
-                ></path>
-              </svg>
+              <div class="contact-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                  ></path>
+                </svg>
+              </div>
               <span class="contact-info">052-728-4388</span>
             </a>
             <a
@@ -204,21 +224,24 @@
               [class.active]="formData.preferredContact === 'chat'"
               (click)="setPreferredContact('chat'); openChat()"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                fill="none"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z"
-                ></path>
-              </svg>
-              <span class="contact-info">Чат</span>
+              <div class="contact-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z"
+                  ></path>
+                </svg>
+              </div>
+              <span class="contact-info">{{ "CONTACT.CHAT" | translate }}</span>
             </a>
           </div>
         </div>
@@ -241,6 +264,8 @@
                 name="phone"
                 [(ngModel)]="formData.phone"
                 required
+                class="phone-input"
+                [style.textAlign]="currentLang === 'he' ? 'right' : 'left'"
               />
             </div>
             <div class="form-group">
@@ -268,12 +293,12 @@
         </div>
       </section>
 
-      <!-- Карта и адрес -->
+      <!-- Map and address -->
       <section class="location-section">
         <h2>{{ "LOCATION.TITLE" | translate }}</h2>
         <div class="map-container">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3388.1780114442224!2d34.8041576!3d31.9072105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1502b6eaa4e2bfc7%3A0x6d16c99e4eb9fad!2z157XqdeQINeU16jXptecIDE5Niwg16jXl9eV15HXldeq!5e0!3m2!1sru!2sil!4v1719329650836!5m2!1sru!2sil"
+            [src]="mapUrl"
             width="100%"
             height="450"
             style="border: 0"

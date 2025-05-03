@@ -8,10 +8,10 @@ import { Component } from '@angular/core';
 })
 export class GalleryComponent {
   images = [
-    { src: 'assets/art1.jpg', alt: 'Фото 1' },
-    { src: 'assets/art2.jpg', alt: 'Фото 2' },
-    { src: 'assets/art3.jpg', alt: 'Фото 3' },
-    { src: 'assets/art4.jpg', alt: 'Фото 4' },
+    { src: 'assets/art1.jpg', alt: 'Photo 1' },
+    { src: 'assets/art2.jpg', alt: 'Photo 2' },
+    { src: 'assets/art3.jpg', alt: 'Photo 3' },
+    { src: 'assets/art4.jpg', alt: 'Photo 4' },
   ];
   modalOpen = false;
   modalImg = '';

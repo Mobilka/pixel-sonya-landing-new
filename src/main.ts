@@ -7,12 +7,12 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 
-// Фабричная функция для создания загрузчика переводов
+// Factory function to create a translation loader
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-// Обновляем конфигурацию приложения
+// Update the application configuration
 const updatedConfig = {
   ...appConfig,
   providers: [
@@ -20,7 +20,7 @@ const updatedConfig = {
     provideHttpClient(),
     importProvidersFrom(
       TranslateModule.forRoot({
-        defaultLanguage: 'he', // Иврит по умолчанию
+        defaultLanguage: 'he', // Hebrew by default
         loader: {
           provide: TranslateLoader,
           useFactory: HttpLoaderFactory,

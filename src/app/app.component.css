@@ -1,4 +1,62 @@
-/* Базовые стили */
+/* Purple package */
+.pricing-card.purple {
+  background-color: #e9e3ff;
+}
+
+/* Peach package */
+.pricing-card.peach {
+  background-color: #ffe9dd;
+  position: relative;
+}
+
+/* Yellow package */
+.pricing-card.yellow {
+  background-color: #fffbe2;
+}
+
+/* Styles for contact form */
+.contact-section {
+  background-color: #FFFCF9;
+  text-align: center;
+}
+
+/* Styles for RTL form */
+[dir="rtl"] .form-group input,
+[dir="rtl"] .form-group textarea {
+  text-align: right;
+  direction: rtl;
+  padding-right: 1rem;
+}
+
+/* Styles for placeholders in RTL mode */
+[dir="rtl"] .form-group input::placeholder,
+[dir="rtl"] .form-group textarea::placeholder {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Additional styles for Firefox */
+[dir="rtl"] .form-group input::-moz-placeholder,
+[dir="rtl"] .form-group textarea::-moz-placeholder {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Additional styles for Microsoft Edge */
+[dir="rtl"] .form-group input::-ms-input-placeholder,
+[dir="rtl"] .form-group textarea::-ms-input-placeholder {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Additional styles for WebKit (Chrome, Safari) */
+[dir="rtl"] .form-group input::-webkit-input-placeholder,
+[dir="rtl"] .form-group textarea::-webkit-input-placeholder {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Basic styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -8,76 +66,22 @@
 
 body {
   background-color: #fff;
-  margin: 0;
   padding: 0;
 }
 
-/* Новый пиксельный фон с использованием псевдоэлемента и box-shadow */
+/* Main container */
 .main-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   position: relative;
   background-color: #ffffff;
+  overflow-x: hidden;
+  overflow-y: auto; /* Adding vertical scrolling */
+  padding-top: 0; /* Removing top padding since .content-wrapper already has margin */
 }
 
-/* Создаем пиксельный фон, добавляя псевдоэлемент */
-.main-container::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-  /* Явное объявление прозрачного фона */
-  background: transparent;
-}
-
-/* Создаем пиксельный фон через позиционируемый div */
-.pixel-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-  overflow: hidden;
-}
-
-/* Добавляем CSS для создания явного пиксельного фона */
-.pixel-background {
-  width: 100vw;
-  height: 100vh;
-  display: grid;
-  grid-template-columns: repeat(12, calc(100vw / 12));
-  grid-template-rows: repeat(12, calc(100vh / 12));
-  background-color: white;
-  z-index: -1;
-}
-
-.pixel-background div {
-  border: 1px solid rgba(0,0,0,0.1);
-  transition: background-color 0.5s ease-in-out;
-}
-
-.pixel-background div:nth-child(3n+1) {
-  background-color: rgba(233, 227, 255, 0.45); /* Фиолетовый */
-}
-
-.pixel-background div:nth-child(3n+2) {
-  background-color: rgba(255, 243, 237, 0.45); /* Персиковый */
-}
-
-.pixel-background div:nth-child(3n+3) {
-  background-color: rgba(255, 251, 226, 0.45); /* Желтый */
-}
-
-.pixel-background div:nth-child(7n+1) {
-  background-color: rgba(255, 255, 255, 0.5); /* Белый */
-}
-
-/* Делаем все контентные элементы поверх фона */
+/* Make all content elements above the background */
 header, .content-wrapper, footer {
   position: relative;
   z-index: 1;
@@ -95,49 +99,89 @@ section {
   width: 100%;
 }
 
-/* Стили для header */
+/* Header styles */
 header {
   background-color: #ffffff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   width: 100%;
-  height: 100px; /* Фиксированная высота шапки */
+  height: 100px; /* Fixed header height */
   display: flex;
   align-items: center;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
 }
 
 nav {
   display: flex;
-  justify-content: space-between; /* Изменено с center на space-between */
-  align-items: center;
   width: 100%;
   height: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  position: relative;
+  justify-content: space-between; /* Space between left and right nav sections */
 }
 
+/* Force navigation layout to be the same in all languages */
+[dir="rtl"] nav {
+  flex-direction: row !important; /* Explicitly override RTL direction */
+}
+
+/* Left navigation part */
+.nav-left {
+  display: flex;
+  align-items: center;
+  width: 40%;
+  justify-content: flex-start;
+}
+
+/* Right navigation part */
+.nav-right {
+  display: flex;
+  align-items: center;
+  width: 60%;
+  justify-content: center;
+}
+
+/* Force same layout in RTL */
+[dir="rtl"] .nav-left {
+  justify-content: flex-start !important;
+}
+
+[dir="rtl"] .nav-right {
+  justify-content: center !important;
+}
+
+/* Logo styles */
 .logo {
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
   padding: 10px 0;
 }
 
 .logo img {
-  height: 100%;
+  height: 70%;
   width: auto;
   object-fit: contain;
   max-height: 100%;
+  max-width: 200px;
 }
 
-/* Стили для переключателя языков */
+/* Language switcher styles */
 .language-switcher {
   display: flex;
   gap: 10px;
+  direction: ltr !important; /* Force LTR direction inside */
+}
+
+/* Force language switcher to maintain LTR order in all modes */
+[dir="rtl"] .language-switcher {
+  direction: ltr !important; /* Force LTR direction inside */
 }
 
 .language-switcher button {
@@ -167,7 +211,7 @@ nav {
   transform: translateY(-1px);
 }
 
-/* RTL поддержка для языков с письмом справа налево (иврит) */
+/* RTL support for right-to-left languages (Hebrew) */
 [dir="rtl"] .hero-text,
 [dir="rtl"] .pricing-card h3,
 [dir="rtl"] .pricing-card .features {
@@ -179,32 +223,38 @@ nav {
   right: 0;
 }
 
-/* Стили для контейнера с контентом */
+/* Content container styles */
 .content-wrapper {
   display: flex;
   flex: 1;
   width: 100%;
   background-color: #fff;
+  margin-top: 100px; /* Adding top margin equal to header height */
 }
 
-/* Стили для слайд-шоу */
+/* Slideshow styles */
 .slideshow-container {
-  width: 33.33%; /* Ровно 1/3 страницы */
+  width: 33.33%; /* Exactly 1/3 of the page */
   position: fixed;
   overflow: hidden;
-  height: calc(100vh - 100px); /* Вычитаем высоту шапки */
+  height: calc(100vh - 100px); /* Subtract header height */
   background-color: #f9f9f9;
-  top: 100px; /* Начинаем под шапкой */
+  top: 100px; /* Start under header */
   left: 0;
+  z-index: 100;
+  display: block;
+  padding: 0; /* Remove padding */
 }
 
 .slideshow {
   width: 100%;
   height: 100%;
   position: relative;
+  margin: 0; /* Remove margin */
+  padding: 0; /* Remove padding */
 }
 
-/* Временный стиль для отображения слайдов */
+/* Temporary style for displaying slides */
 .slide {
   position: absolute;
   top: 0;
@@ -214,6 +264,8 @@ nav {
   background-color: #e0e0e0;
   opacity: 0;
   transition: opacity 1s ease-in-out;
+  margin: 0; /* Remove margin */
+  padding: 0; /* Remove padding */
 }
 
 .slide.active {
@@ -225,9 +277,11 @@ nav {
   height: 100%;
   object-fit: cover;
   object-position: center;
+  margin: 0; /* Remove margin */
+  padding: 0; /* Remove padding */
 }
 
-/* Стили для управления слайдером */
+/* Styles for slide controls */
 .slide-controls {
   position: absolute;
   top: 50%;
@@ -286,22 +340,22 @@ nav {
   transform: scale(1.2);
 }
 
-/* Стили для основного содержимого */
+/* Styles for main content */
 .main-content {
-  width: 66.67%; /* Оставшиеся 2/3 страницы */
+  width: 66.67%; /* Remaining 2/3 of the page */
   display: flex;
   flex-direction: column;
-  margin-left: 33.33%; /* Добавляем отступ слева равный ширине слайд-шоу */
+  margin-left: 33.33%; /* Add left margin equal to slideshow width */
 }
 
-/* Стили для hero секции */
+/* Styles for hero section */
 .hero-section {
   padding: 3rem 2rem;
   background-color: #FFFCF9;
   display: flex;
   align-items: center;
   gap: 2rem;
-  direction: rtl; /* Для поддержки правостороннего текста */
+  direction: rtl; /* For right-to-left text support */
 }
 
 .hero-image {
@@ -315,7 +369,9 @@ nav {
 
 .hero-image img {
   max-width: 100%;
-  height: auto;
+  height: 200px;
+  width: auto;
+  object-fit: contain;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
@@ -324,7 +380,7 @@ nav {
   flex: 1;
   max-width: 60%;
   text-align: right;
-  direction: rtl; /* Для поддержки правостороннего текста */
+  direction: rtl; /* For right-to-left text support */
 }
 
 .hero-text h1 {
@@ -340,7 +396,7 @@ nav {
   line-height: 1.6;
 }
 
-/* Стили для кнопок в соответствии с изображением */
+/* Styles for buttons in accordance with image */
 .primary-btn, .submit-btn {
   background-color: #FFF3ED;
   color: #222;
@@ -361,7 +417,7 @@ nav {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Стили для секции с ценами */
+/* Styles for pricing section */
 .pricing-section {
   background-color: #fff;
   padding-top: 4rem;
@@ -376,7 +432,8 @@ nav {
   flex-wrap: wrap;
   max-width: 1000px;
   margin: 0 auto;
-  direction: rtl; /* Для поддержки текста на иврите */
+  direction: rtl; /* For right-to-left text support */
+  align-items: stretch;
 }
 
 .pricing-card {
@@ -392,22 +449,8 @@ nav {
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-}
-
-/* Фиолетовый пакет */
-.pricing-card.purple {
-  background-color: #e9e3ff;
-}
-
-/* Персиковый пакет */
-.pricing-card.peach {
-  background-color: #ffe9dd;
-  position: relative;
-}
-
-/* Желтый пакет */
-.pricing-card.yellow {
-  background-color: #fffbe2;
+  margin: 0 auto;
+  max-width: 300px;
 }
 
 .pricing-card:hover {
@@ -416,7 +459,7 @@ nav {
 }
 
 .pricing-card.featured {
-  transform: scale(1.03);
+  transform: none;
 }
 
 .pricing-card h3 {
@@ -433,38 +476,113 @@ nav {
   margin-bottom: 1.5rem;
 }
 
+/* Basic styles for lists */
 .features {
   list-style: none;
-  text-align: right;
-  direction: rtl;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+/* Basic styles for list items */
+.features li {
+  position: relative;
+  margin-bottom: 0.8rem;
+  color: #333;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Markers for all languages */
+.features li::before {
+  content: "✓";
+  color: #333;
+  flex-shrink: 0;
+}
+
+/* Styles for LTR (English, Russian) */
+[dir="ltr"] .features li {
+  text-align: left;
+  justify-content: flex-start;
   padding: 0;
 }
 
-.features li {
-  margin-bottom: 0.8rem;
-  position: relative;
-  padding-right: 25px;
-  color: #333;
+[dir="ltr"] .features li::before {
+  margin-right: 5px;
 }
 
-.features li:before {
-  content: "✓";
-  color: #333;
-  position: absolute;
-  right: 0;
+/* Special styles for the third element in LTR mode */
+[dir="ltr"] .features li:nth-child(3) {
+  text-align: left;
+  justify-content: flex-start;
+  font-weight: bold;
+  color: #E6997D; /* Color highlight */
+  border-left: 3px solid #E6997D; /* Left border */
+  padding-left: 7px; /* Left padding */
 }
 
-/* Стили для контактной формы */
-.contact-section {
-  background-color: #FFFCF9;
-  text-align: center;
+[dir="ltr"] .features li:nth-child(3)::before {
+  color: #E6997D; /* Same color marker */
 }
 
-.contact-section p {
-  margin-bottom: 2rem;
-  color: #666;
+/* Styles for RTL (Hebrew) */
+[dir="rtl"] .features li {
+  text-align: right;
+  justify-content: flex-start;
+  flex-direction: row-reverse;
+  padding: 0;
 }
 
+[dir="rtl"] .features li::before {
+  margin-left: 5px;
+}
+
+/* Special styles for the third element in RTL mode */
+[dir="rtl"] .features li:nth-child(3) {
+  text-align: right;
+  justify-content: flex-start;
+  font-weight: bold;
+  color: #E6997D; /* Color highlight */
+  border-right: 3px solid #E6997D; /* Right border */
+  padding-right: 7px; /* Right padding */
+}
+
+[dir="rtl"] .features li:nth-child(3)::before {
+  color: #E6997D; /* Same color marker */
+}
+
+/* Special styles for pricing cards in RTL languages */
+[dir="rtl"] .pricing-card {
+  direction: rtl;
+  text-align: right;
+}
+
+/* More aggressive rules for RTL (Hebrew) */
+[dir="rtl"] * {
+  text-align: right !important;
+}
+
+[dir="rtl"] .pricing-card,
+[dir="rtl"] .pricing-card * {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Forced styles for lists in RTL */
+[dir="rtl"] .features li {
+  flex-direction: row-reverse !important;
+  text-align: right !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+}
+
+[dir="rtl"] .features li::before {
+  margin-left: 5px !important;
+  margin-right: 0 !important;
+}
+
+/* Styles for contact form */
 .contact-container {
   max-width: 600px;
   margin: 0 auto;
@@ -503,7 +621,7 @@ nav {
   box-shadow: 0 0 0 3px rgba(230, 153, 125, 0.1);
 }
 
-/* Стили для контактного блока */
+/* Styles for contact block */
 .contact-methods {
   display: flex;
   flex-direction: column;
@@ -522,13 +640,14 @@ nav {
   max-width: 600px;
 }
 
-/* Базовые стили для контактных кнопок (общие) */
+/* Base styles for contact buttons (common) */
 .contact-bubble {
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start;
+  gap: 12px;
   position: relative;
-  padding: 0.7rem 1.5rem;
+  padding: 0.8rem 1.5rem;
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -537,9 +656,23 @@ nav {
   color: #333;
   min-width: 220px;
   height: 50px;
+  margin: 0 auto;
 }
 
-/* Иконки внутри контактных кнопок */
+/* RTL version for contact buttons */
+[dir="rtl"] .contact-bubble {
+  flex-direction: row-reverse;
+}
+
+/* Wrapper for icons */
+.contact-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Icons inside contact buttons */
 .contact-bubble svg {
   width: 22px;
   height: 22px;
@@ -547,7 +680,7 @@ nav {
   transition: all 0.3s ease;
 }
 
-/* Специфические стили для каждой иконки */
+/* Specific styles for each icon */
 .contact-bubble.email svg {
   stroke: rgb(130, 170, 100);
 }
@@ -560,16 +693,26 @@ nav {
   stroke: rgb(240, 140, 100);
 }
 
-/* Текст внутри контактных кнопок */
+/* Text inside contact buttons */
 .contact-info {
-  margin-left: 10px;
   font-size: 15px;
   white-space: nowrap;
-  display: inline-block;
   font-weight: 500;
+  align-self: center;
+  text-align: center;
 }
 
-/* Стили при наведении и при активном состоянии */
+[dir="ltr"] .contact-info {
+  text-align: left;
+  padding-left: 5px;
+}
+
+[dir="rtl"] .contact-info {
+  text-align: right;
+  padding-right: 5px;
+}
+
+/* Styles when hovering and when active */
 .contact-bubble:hover, .contact-bubble.active {
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
@@ -580,7 +723,7 @@ nav {
   stroke-width: 2;
 }
 
-/* Специфичные стили для разных типов контактов */
+/* Specific styles for different types of contacts */
 .contact-bubble.email {
   background-color: rgb(242 252 226);
 }
@@ -605,17 +748,18 @@ nav {
   background-color: rgb(251, 213, 193);
 }
 
-/* Класс для элементов, видимых только на мобильных устройствах */
+/* Class for elements visible only on mobile devices */
 .mobile-only {
   display: none;
 }
 
-/* Адаптация для планшетов */
+/* Adaptation for tablets */
 @media (max-width: 768px) {
   .contact-bubble {
     min-width: 180px;
     height: 45px;
     padding: 0.7rem 1rem;
+    grid-gap: 8px;
   }
   
   .contact-options {
@@ -625,34 +769,183 @@ nav {
   .contact-info {
     font-size: 14px;
   }
-}
-
-/* Адаптация для мобильных устройств */
-@media (max-width: 480px) {
-  .contact-bubble {
-    min-width: auto;
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    padding: 0;
-    justify-content: center;
+  
+  .logo {
+    margin-right: 10px; /* Less margin on mobile */
+    width: 160px; /* Smaller width on mobile */
+    height: auto;
   }
   
-  .contact-info {
-    display: none; /* Скрываем текст на мобильных */
+  .logo img {
+    height: 40px;
+    max-width: 160px;
+  }
+  
+  header {
+    height: auto;
+    min-height: 80px;
+  }
+  
+  nav {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Adaptation for mobile devices */
+@media (max-width: 480px) {
+  .contact-bubble,
+  a.contact-bubble,
+  .contact-options .contact-bubble {
+    min-width: 0 !important;
+    width: 60px !important; /* Fixed width */
+    height: 60px !important; /* Same height to create perfect circle */
+    border-radius: 50% !important;
+    padding: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    aspect-ratio: 1/1 !important; /* Ensures perfect circle */
+    overflow: hidden !important;
+  }
+  
+  .contact-icon,
+  .contact-bubble .contact-icon {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  .contact-info,
+  .contact-bubble .contact-info {
+    display: none !important; /* Hide text on mobile */
   }
   
   .contact-options {
-    gap: 30px;
+    gap: 25px !important;
+    justify-content: center !important;
+    display: flex !important;
   }
   
-  /* Показываем элементы с классом mobile-only только на мобильных */
+  /* Increase icons for better visibility */
+  .contact-bubble svg {
+    width: 26px !important;
+    height: 26px !important;
+    stroke-width: 2 !important;
+  }
+  
+  /* Specific colors for different contact types */
+  .contact-bubble.email {
+    background-color: rgb(232, 249, 205) !important;
+  }
+  
+  .contact-bubble.phone {
+    background-color: rgb(190, 215, 250) !important;
+  }
+  
+  .contact-bubble.chat {
+    background-color: rgb(251, 213, 193) !important;
+  }
+  
+  /* Enhanced hover effect for mobile */
+  .contact-bubble:hover, 
+  .contact-bubble.active {
+    transform: translateY(-5px) scale(1.05) !important;
+  }
+  
+  /* Show elements with mobile-only class only on mobile */
   .mobile-only {
-    display: flex;
+    display: flex !important;
+  }
+  
+  .logo {
+    margin-right: 5px; /* Even less margin on smallest screens */
+    width: 140px; /* Smaller width on smallest screens */
+  }
+  
+  .logo img {
+    height: 35px;
+    max-width: 140px;
+  }
+  
+  nav {
+    padding: 0.5rem;
+  }
+  
+  .language-switcher {
+    gap: 3px;
+  }
+  
+  .language-switcher button {
+    padding: 3px 6px;
+    font-size: 11px;
+    min-width: 30px;
   }
 }
 
-/* Стили для карты */
+/* Для планшетов также изменим кнопки на круглые, но большего размера */
+@media (min-width: 481px) and (max-width: 768px) {
+  .contact-bubble,
+  a.contact-bubble,
+  .contact-options .contact-bubble {
+    min-width: 0 !important;
+    width: 70px !important; /* Larger than on mobile */
+    height: 70px !important; /* Same height to create perfect circle */
+    border-radius: 50% !important;
+    padding: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    aspect-ratio: 1/1 !important; /* Ensures perfect circle */
+    overflow: hidden !important;
+  }
+  
+  .contact-info,
+  .contact-bubble .contact-info {
+    display: none !important; /* Hide text on tablets too */
+  }
+  
+  .contact-icon,
+  .contact-bubble .contact-icon {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  .contact-bubble svg {
+    width: 30px !important;
+    height: 30px !important;
+    stroke-width: 2 !important;
+  }
+  
+  .contact-options {
+    gap: 30px !important;
+    justify-content: center !important;
+    display: flex !important;
+  }
+  
+  /* Specific colors for different contact types */
+  .contact-bubble.email {
+    background-color: rgb(232, 249, 205) !important;
+  }
+  
+  .contact-bubble.phone {
+    background-color: rgb(190, 215, 250) !important;
+  }
+  
+  .contact-bubble.chat {
+    background-color: rgb(251, 213, 193) !important;
+  }
+}
+
+/* Styles for map */
 .location-section {
   padding-top: 4rem;
   padding-bottom: 4rem;
@@ -676,7 +969,7 @@ nav {
   text-align: center;
 }
 
-/* Стили для footer */
+/* Styles for footer */
 footer {
   background-color: #FFF3ED;
   color: #555;
@@ -686,26 +979,32 @@ footer {
   border-top: 1px solid #E6C7B7;
 }
 
-/* Адаптивность */
+/* Adaptability */
 @media (max-width: 992px) {
   .content-wrapper {
     flex-direction: column;
+    margin-top: 100px; /* Keep padding on tablets */
+    display: flex;
   }
   
+  /* Completely redefine styles for slideshow on tablets and mobile */
   .slideshow-container {
+    position: relative;
     width: 100%;
     height: 500px;
-    position: relative;
-    top: 0;
-  }
-  
-  .slideshow {
-    height: 500px;
+    top: auto;
+    left: auto;
+    margin: 0;
+    padding: 0;
+    order: 0; /* Slideshow first */
   }
   
   .main-content {
     width: 100%;
     margin-left: 0;
+    margin-top: 0;
+    padding-top: 0;
+    order: 1; /* Main content second */
   }
   
   .pricing-card {
@@ -736,6 +1035,20 @@ footer {
   nav {
     padding: 0 1rem;
     position: relative;
+    justify-content: space-between;
+    flex-direction: row !important; /* Ensure nav remains horizontal */
+  }
+  
+  /* Keep fixed position but hide element */
+  .spacer {
+    width: 0;
+    display: none; /* Hide on tablets */
+    order: 3 !important;
+  }
+  
+  [dir="rtl"] .spacer {
+    order: 3 !important;
+    display: none;
   }
 }
 
@@ -750,35 +1063,100 @@ footer {
   
   .pricing-card {
     width: 100%;
-    max-width: 350px;
+    max-width: 300px;
+    margin: 0 auto 1.5rem;
+  }
+  
+  /* Redefine styles for container for packages in mobile version */
+  .pricing-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  /* Order of cards: first child, then base, then premium */
+  .pricing-card.yellow {
+    order: 1;
+  }
+  
+  .pricing-card.peach {
+    order: 2;
+  }
+  
+ .pricing-card.purple {
+    order: 3;
   }
   
   .pricing-card.featured {
     transform: none;
-    order: -1;
   }
   
+  /* Redefine styles for slideshow for mobile */
   .slideshow-container {
     height: 400px;
+    position: relative;
+    width: 100%;
+    order: 0; /* Slideshow first */
+    margin: 0; /* Remove margin */
+    padding: 0; /* Remove padding */
+    border-radius: 0; /* Remove border radius */
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   }
   
   .slideshow {
     height: 400px;
+    margin: 0; /* Remove margin */
+    padding: 0; /* Remove padding */
   }
   
   nav {
-    flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end; /* Keep items right-aligned */
     padding: 0.5rem;
   }
   
-  .logo {
-    height: auto;
-    margin-bottom: 0.5rem;
+  .logo img {
+    height: 40px;
+    max-width: 160px;
   }
   
-  .logo img {
-    height: 50px;
+  .language-switcher {
+    gap: 5px;
+  }
+  
+  .language-switcher button {
+    padding: 5px 8px;
+    font-size: 12px;
+    min-width: 35px;
+  }
+  
+  header {
+    height: auto;
+    min-height: 80px;
+  }
+  
+  .content-wrapper {
+    margin-top: 80px; /* Reduce padding on mobile */
+    padding-top: 0; /* Remove top padding since slideshow will be first element */
+  }
+  
+  .main-content {
+    padding-top: 0;
+  }
+  
+  .contact-bubble {
+    min-width: 180px;
+    height: 45px;
+    padding: 0.7rem 1rem;
+    grid-gap: 8px;
+  }
+  
+  .contact-options {
+    gap: 20px;
+  }
+  
+  .contact-info {
+    font-size: 14px;
   }
 }
 
@@ -795,16 +1173,37 @@ footer {
     padding: 1.5rem;
   }
   
+  /* Even smaller slideshow height for mobile phones */
   .slideshow-container {
     height: 300px;
+    margin: 0; /* Remove margin */
+    padding: 0; /* Remove padding */
+    border-radius: 0; /* Remove border radius */
   }
   
   .slideshow {
     height: 300px;
+    margin: 0; /* Remove margin */
+    padding: 0; /* Remove padding */
+  }
+  
+  .logo img {
+    height: 35px;
+    max-width: 140px;
+  }
+  
+  .language-switcher {
+    gap: 3px;
+  }
+  
+  .language-switcher button {
+    padding: 3px 6px;
+    font-size: 11px;
+    min-width: 30px;
   }
 }
 
-/* Стили для галереи */
+/* Styles for gallery */
 .gallery-overlay {
   position: fixed;
   top: 0;
@@ -865,10 +1264,9 @@ footer {
 }
 
 .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  grid-auto-rows: 220px;
-  gap: 1.5rem;
+  display: block;
+  height: calc(100% - 70px);
+  width: 100%;
   overflow-y: auto;
   padding: 0.5rem;
   flex: 1;
@@ -876,7 +1274,7 @@ footer {
   scrollbar-color: #d1bfff #f5f5f5;
 }
 
-/* Стилизация скроллбара для WebKit (Chrome, Safari, Edge) */
+/* Styles for scrollbar for WebKit (Chrome, Safari, Edge) */
 .gallery-grid::-webkit-scrollbar {
   width: 8px;
 }
@@ -891,6 +1289,14 @@ footer {
   border-radius: 10px;
 }
 
+/* Styles for elements inside virtual scrolling */
+.cdk-virtual-scroll-content-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-gap: 1.5rem;
+  width: 100%;
+}
+
 .gallery-item {
   overflow: hidden;
   border-radius: 12px;
@@ -899,6 +1305,7 @@ footer {
   transition: all 0.3s ease;
   position: relative;
   animation: fadeIn 0.5s both;
+  height: 220px; /* Fixed height for elements in virtual scrolling */
 }
 
 .gallery-item:hover {
@@ -918,7 +1325,7 @@ footer {
   transform: scale(1.05);
 }
 
-/* Модальное окно для просмотра фото */
+/* Modal window for viewing photo */
 .image-modal {
   position: fixed;
   top: 0;
@@ -968,7 +1375,7 @@ footer {
   transform: rotate(90deg);
 }
 
-/* Кнопки навигации в модальном окне */
+/* Navigation buttons in modal window */
 .modal-prev,
 .modal-next {
   position: absolute;
@@ -1004,7 +1411,7 @@ footer {
   right: 20px;
 }
 
-/* Счетчик изображений */
+/* Image counter */
 .modal-counter {
   position: absolute;
   bottom: 20px;
@@ -1019,7 +1426,7 @@ footer {
   z-index: 3100;
 }
 
-/* Адаптивность для модального окна */
+/* Adaptability for modal window */
 @media (max-width: 768px) {
   .modal-prev,
   .modal-next {
@@ -1051,7 +1458,7 @@ footer {
   }
 }
 
-/* Анимации */
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1072,7 +1479,7 @@ footer {
   }
 }
 
-/* Адаптивность для галереи */
+/* Adaptability for gallery */
 @media (max-width: 768px) {
   .gallery-container {
     width: 95%;
@@ -1080,10 +1487,12 @@ footer {
     height: 80vh;
   }
   
-  .gallery-grid {
+  .cdk-virtual-scroll-content-wrapper {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    grid-auto-rows: 160px;
-    gap: 1rem;
+  }
+  
+  .gallery-item {
+    height: 160px;
   }
   
   .gallery-title {
@@ -1099,10 +1508,12 @@ footer {
     height: 85vh;
   }
   
-  .gallery-grid {
+  .cdk-virtual-scroll-content-wrapper {
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    grid-auto-rows: 130px;
-    gap: 0.8rem;
+  }
+  
+  .gallery-item {
+    height: 130px;
   }
   
   .gallery-title {
@@ -1117,41 +1528,7 @@ footer {
   }
 }
 
-/* Адаптивность для переключателя языков */
-@media (max-width: 768px) {
-  nav {
-    padding: 0 1rem;
-    flex-wrap: wrap;
-    position: relative;
-  }
-  
-  .language-switcher {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    gap: 5px;
-  }
-  
-  .language-switcher button {
-    padding: 4px 8px;
-    font-size: 12px;
-    min-width: 36px;
-  }
-}
-
-@media (max-width: 480px) {
-  .language-switcher {
-    gap: 3px;
-  }
-  
-  .language-switcher button {
-    padding: 3px 6px;
-    font-size: 11px;
-    min-width: 30px;
-  }
-}
-
-/* Стили для бейджа популярного пакета */
+/* Styles for popular package badge */
 .popular-badge {
   position: absolute;
   top: -10px;
@@ -1164,4 +1541,90 @@ footer {
   font-weight: 500;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   z-index: 1;
+}
+
+/* Specific styles for phone field in RTL mode - redefine with higher priority */
+[dir="rtl"] .form-group input[type="tel"] {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+[dir="rtl"] .form-group input[type="tel"]::placeholder {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Explicit styles for each browser for phone field */
+[dir="rtl"] .form-group input[type="tel"]::-webkit-input-placeholder {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+[dir="rtl"] .form-group input[type="tel"]::-moz-placeholder {
+  text-align: right !important;
+  direction: rtl !important;
+  opacity: 1 !important;
+}
+
+[dir="rtl"] .form-group input[type="tel"]:-ms-input-placeholder {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+[dir="rtl"] .form-group input[type="tel"]::-ms-input-placeholder {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Specific styles for phone field through class */
+.phone-input {
+  direction: inherit;
+}
+
+[dir="rtl"] .phone-input {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+[dir="rtl"] .phone-input::placeholder {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* Styles for mobile slideshow */
+@media (max-width: 768px) {
+  .mobile-slideshow {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* Remove smooth scrolling as animations are disabled */
+html {
+  scroll-behavior: auto;
+}
+
+/* All elements should be visible immediately */
+.hero-section, .pricing-section, .contact-section, .location-section,
+.hero-image, .hero-text, .pricing-card, .contact-bubble, .form-group, .map-container {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* Remove all animation classes */
+.animate-on-scroll, .animate {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Модификации для мобильной версии */
+@media (max-width: 768px) {
+  .hero-section, .pricing-section, .contact-section, .location-section,
+  .pricing-card, .contact-bubble, .form-group, .map-container {
+    transition-duration: 0.6s;
+  }
 } 

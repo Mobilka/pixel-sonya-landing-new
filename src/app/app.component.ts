@@ -1,64 +1,73 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule, CommonModule, TranslateModule],
+  imports: [
+    RouterOutlet,
+    FormsModule,
+    CommonModule,
+    TranslateModule,
+    ScrollingModule,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   title = 'Pixel Sonya';
 
-  // Поддерживаемые языки
+  // Supported languages
   langs = ['he', 'en', 'ru'];
-  currentLang = 'he'; // Иврит по умолчанию
+  currentLang = 'he'; // Hebrew by default
 
-  // Добавляем контактную информацию
+  // Map URL, safe for use in iframe
+  mapUrl!: SafeResourceUrl;
+
+  // Adding contact information
   contactInfo = {
     email: 'pixelsonya@gmail.com',
     phone: '+972 052 728 4388',
   };
 
-  // Флаг для отображения галереи
+  // Flag for displaying gallery
   isGalleryOpen = false;
 
-  // Данные слайд-шоу
+  // Slideshow data
   slides = [
     {
       image: 'assets/Sonya.png',
-      alt: 'Портрет Сони',
+      alt: 'Portrait of Sonya',
     },
     {
       image: 'assets/logo.png',
-      alt: 'Логотип Pixel Sonya',
+      alt: 'Pixel Sonya Logo',
     },
     {
-      image: 'assets/Sonya.png', // Временно дублируем, пока нет других фото
-      alt: 'Соня работает',
+      image: 'assets/Sonya.png', // Temporarily duplicated until we have more photos
+      alt: 'Sonya working',
     },
     {
-      image: 'assets/logo.png', // Временно дублируем, пока нет других фото
-      alt: 'Работы Pixel Sonya',
+      image: 'assets/logo.png', // Temporarily duplicated until we have more photos
+      alt: 'Pixel Sonya Works',
     },
   ];
 
-  // Галерея изображений - количество примеров сокращено, дубликаты удалены
-  galleryImages = [
-    { src: 'assets/Sonya.png', alt: 'Портрет Сони' },
-    { src: 'assets/logo.png', alt: 'Логотип Pixel Sonya' },
-    // Ниже заглушки, которые нужно будет заменить на реальные работы
-    { src: 'assets/Sonya.png', alt: 'Пример работы 1' },
-    { src: 'assets/logo.png', alt: 'Пример работы 2' },
-    { src: 'assets/Sonya.png', alt: 'Пример работы 3' },
-    { src: 'assets/logo.png', alt: 'Пример работы 4' },
-  ];
+  // For virtual scrolling demonstration, creating a large array of images
+  galleryImages = Array.from({ length: 100 }, (_, i) => {
+    const isEven = i % 2 === 0;
+    return {
+      src: isEven ? 'assets/Sonya.png' : 'assets/logo.png',
+      alt: `${isEven ? 'Sonya' : 'Logo'} - example ${i + 1}`,
+    };
+  });
 
-  // Переменные для модального окна галереи
+  // Variables for gallery modal window
   selectedImage = '';
   selectedImageAlt = '';
   selectedImageIndex = -1;
@@ -66,7 +75,7 @@ export class AppComponent implements OnInit {
   currentSlide = 0;
   slideInterval: any;
 
-  // Данные формы
+  // Form data
   formData = {
     name: '',
     phone: '',
@@ -75,79 +84,123 @@ export class AppComponent implements OnInit {
     preferredContact: '',
   };
 
-  constructor(private translate: TranslateService) {
-    // Установка языка по умолчанию и доступных языков
+  constructor(
+    private translate: TranslateService,
+    private sanitizer: DomSanitizer
+  ) {
+    // Setting default language and available languages
     translate.addLangs(this.langs);
     translate.setDefaultLang('he');
     translate.use('he');
+
+    // Map URL initialization
+    this.updateMapUrl('he');
   }
 
   ngOnInit() {
-    // Автоматическая смена слайдов каждые 5 секунд
+    // Automatic slide change every 5 seconds
     this.startSlideShow();
 
-    // Устанавливаем начальное направление текста
+    // Setting initial text direction
     const htmlTag = document.getElementsByTagName('html')[0] as HTMLHtmlElement;
     if (this.currentLang === 'he') {
       htmlTag.setAttribute('dir', 'rtl');
     } else {
       htmlTag.setAttribute('dir', 'ltr');
     }
+
+    // Setting lang attribute on html tag
+    htmlTag.setAttribute('lang', this.currentLang);
   }
 
-  // Метод для смены языка
+  ngAfterViewInit() {
+    // Animation disabled to improve content visibility
+    // Leaving a placeholder for potential future use
+  }
+
+  // Scroll tracking (disabled)
+  @HostListener('window:scroll', ['$event'])
+  onScroll() {
+    // Animation disabled
+  }
+
+  // Method disabled
+  checkForAnimation() {
+    // Animation disabled
+  }
+
+  // Method for changing language
   changeLanguage(lang: string) {
     this.translate.use(lang);
     this.currentLang = lang;
 
-    // Устанавливаем направление текста (RTL для иврита)
+    // Updating map URL when changing language
+    this.updateMapUrl(lang);
+
+    // Setting text direction (RTL for Hebrew)
     const htmlTag = document.getElementsByTagName('html')[0] as HTMLHtmlElement;
     if (lang === 'he') {
       htmlTag.setAttribute('dir', 'rtl');
     } else {
       htmlTag.setAttribute('dir', 'ltr');
     }
+
+    // Setting lang attribute on html tag
+    htmlTag.setAttribute('lang', lang);
   }
 
-  // Запуск автоматической смены слайдов
+  // Method for updating map URL depending on selected language
+  updateMapUrl(lang: string) {
+    // Base map URL with coordinates
+    const baseMapUrl =
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3388.1780114442224!2d34.8041576!3d31.9072105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1502b6eaa4e2bfc7%3A0x6d16c99e4eb9fad!2z157XqdeQINeU16jXptecIDE5Niwg16jXl9eV15HXldeq!5e0!3m2!1s';
+
+    // Adding language code to URL
+    let fullMapUrl = `${baseMapUrl}${lang}!2sil!4v1719329650836!5m2!1s${lang}!2sil`;
+
+    // Using DomSanitizer to create a safe URL
+    this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fullMapUrl);
+  }
+
+  // Starting automatic slide change
   startSlideShow() {
     this.slideInterval = setInterval(() => {
       this.nextSlide();
     }, 5000);
   }
 
-  // Остановка автоматической смены слайдов
+  // Stopping automatic slide change
   stopSlideShow() {
     clearInterval(this.slideInterval);
   }
 
-  // Переход к следующему слайду
+  // Going to next slide
   nextSlide() {
     this.currentSlide = (this.currentSlide + 1) % this.slides.length;
   }
 
-  // Переход к предыдущему слайду
+  // Going to previous slide
   prevSlide() {
     this.currentSlide =
       (this.currentSlide - 1 + this.slides.length) % this.slides.length;
   }
 
-  // Переход к конкретному слайду
+  // Going to specific slide
   goToSlide(index: number) {
     this.currentSlide = index;
   }
 
-  // Метод отправки формы
+  // Form submission method
   onSubmit() {
-    console.log('Форма отправлена с данными:', this.formData);
-    // Здесь будет логика отправки данных на сервер
+    console.log('Form submitted with data:', this.formData);
+    // Here will be the logic for sending data to the server
     this.translate.get('CONTACT.SUCCESS').subscribe((res: string) => {
       alert(res);
     });
     this.resetForm();
   }
 
-  // Сброс формы
+  // Form reset
   resetForm() {
     this.formData = {
       name: '',
@@ -158,39 +211,39 @@ export class AppComponent implements OnInit {
     };
   }
 
-  // Метод установки предпочтительного способа связи
+  // Method for setting preferred contact method
   setPreferredContact(type: string) {
     this.formData.preferredContact = type;
   }
 
-  // Метод для отображения галереи
+  // Method for displaying gallery
   showGallery() {
     this.isGalleryOpen = true;
   }
 
-  // Закрытие галереи
+  // Closing gallery
   closeGallery() {
     this.isGalleryOpen = false;
   }
 
-  // Открыть увеличенное изображение
+  // Open enlarged image
   openImageModal(src: string, alt: string) {
     this.selectedImage = src;
     this.selectedImageAlt = alt;
-    // Находим индекс текущего изображения
+    // Finding current image index
     this.selectedImageIndex = this.galleryImages.findIndex(
       (img) => img.src === src && img.alt === alt
     );
   }
 
-  // Закрыть увеличенное изображение
+  // Close enlarged image
   closeImageModal() {
     this.selectedImage = '';
     this.selectedImageAlt = '';
     this.selectedImageIndex = -1;
   }
 
-  // Перейти к следующему изображению
+  // Go to next image
   nextImage(event?: Event) {
     if (event) {
       event.stopPropagation();
@@ -198,14 +251,14 @@ export class AppComponent implements OnInit {
     if (this.selectedImageIndex < this.galleryImages.length - 1) {
       this.selectedImageIndex++;
     } else {
-      this.selectedImageIndex = 0; // Переход к первому изображению, если достигнут конец
+      this.selectedImageIndex = 0; // Going to first image if end is reached
     }
     const newImage = this.galleryImages[this.selectedImageIndex];
     this.selectedImage = newImage.src;
     this.selectedImageAlt = newImage.alt;
   }
 
-  // Перейти к предыдущему изображению
+  // Go to previous image
   prevImage(event?: Event) {
     if (event) {
       event.stopPropagation();
@@ -213,17 +266,17 @@ export class AppComponent implements OnInit {
     if (this.selectedImageIndex > 0) {
       this.selectedImageIndex--;
     } else {
-      this.selectedImageIndex = this.galleryImages.length - 1; // Переход к последнему изображению, если достигнуто начало
+      this.selectedImageIndex = this.galleryImages.length - 1; // Going to last image if beginning is reached
     }
     const newImage = this.galleryImages[this.selectedImageIndex];
     this.selectedImage = newImage.src;
     this.selectedImageAlt = newImage.alt;
   }
 
-  // Обработчик клавиш для навигации
+  // Key handler for navigation
   @HostListener('window:keydown', ['$event'])
   handleKeyboardNavigation(event: KeyboardEvent) {
-    if (!this.selectedImage) return; // Выходим, если модальное окно не открыто
+    if (!this.selectedImage) return; // Exit if modal window is not open
 
     switch (event.key) {
       case 'ArrowRight':
@@ -238,25 +291,25 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // Методы для контактных кнопок
+  // Methods for contact buttons
   openChat() {
-    // Реализация открытия чата
-    alert('Открытие чата');
-    // Будущая реализация чата
+    // Chat opening implementation
+    alert('Opening chat');
+    // Future chat implementation
   }
 
-  // Метод для отправки email
+  // Method for sending email
   sendEmail() {
     window.location.href = `mailto:${this.contactInfo.email}`;
   }
 
-  // Метод для звонка
+  // Method for calling
   callPhone() {
     window.location.href = `tel:${this.contactInfo.phone.replace(/\D/g, '')}`;
   }
 
-  // Метод для открытия WhatsApp - пустая реализация для фикса ошибки
+  // Method for opening WhatsApp - empty implementation to fix error
   openWhatsApp() {
-    // Пустая реализация для обхода ошибки компиляции
+    // Empty implementation to bypass compilation error
   }
 }
