@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-gallery',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './gallery.component.html',
   styleUrl: './gallery.component.scss',
 })
 export class GalleryComponent {
+  @Input() isOpen = true;
+
   images = [
     { src: 'assets/art1.jpg', alt: 'Photo 1' },
     { src: 'assets/art2.jpg', alt: 'Photo 2' },
@@ -22,6 +26,7 @@ export class GalleryComponent {
     this.modalAlt = alt;
     this.modalOpen = true;
   }
+
   closeModal() {
     this.modalOpen = false;
   }

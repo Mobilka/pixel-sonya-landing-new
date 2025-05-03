@@ -41,33 +41,9 @@
     </nav>
   </header>
 
-  <!-- Gallery -->
-  <div class="gallery-overlay" *ngIf="isGalleryOpen">
-    <div class="gallery-container">
-      <button class="gallery-close" (click)="closeGallery()">×</button>
-      <h2 class="gallery-title">{{ "GALLERY.TITLE" | translate }}</h2>
-
-      <!-- Using virtual scrolling for gallery -->
-      <cdk-virtual-scroll-viewport
-        class="gallery-grid"
-        itemSize="220"
-        minBufferPx="400"
-        maxBufferPx="800"
-      >
-        <div
-          class="gallery-item"
-          *cdkVirtualFor="let img of galleryImages; let i = index"
-          (click)="openImageModal(img.src, img.alt)"
-          [style.animationDelay]="i * 0.05 + 's'"
-        >
-          <img [src]="img.src" [alt]="img.alt" />
-        </div>
-      </cdk-virtual-scroll-viewport>
-    </div>
-  </div>
-
   <!-- Modal window for photo viewing -->
-  <div class="image-modal" *ngIf="selectedImage" (click)="closeImageModal()">
+  @if (selectedImage) {
+  <div class="image-modal" (click)="closeImageModal()">
     <img [src]="selectedImage" [alt]="selectedImageAlt" class="modal-image" />
     <button
       class="modal-close"
@@ -81,18 +57,17 @@
       {{ selectedImageIndex + 1 }} / {{ galleryImages.length }}
     </div>
   </div>
+  }
 
   <div class="content-wrapper">
     <!-- Slideshow on desktop (left) and under hero on mobile -->
     <section class="slideshow-container">
       <div class="slideshow">
-        <div
-          class="slide"
-          *ngFor="let slide of slides; let i = index"
-          [class.active]="currentSlide === i"
-        >
+        @for (slide of slides; track slide; let i = $index) {
+        <div class="slide" [class.active]="currentSlide === i">
           <img [src]="slide.image" [alt]="slide.alt" />
         </div>
+        }
         <!-- Slide controls -->
         <div class="slide-controls">
           <button class="prev-btn" (click)="prevSlide()">&#10094;</button>
@@ -100,12 +75,13 @@
         </div>
         <!-- Slide dots -->
         <div class="slide-dots">
+          @for (slide of slides; track slide; let i = $index) {
           <span
-            *ngFor="let slide of slides; let i = index"
             class="dot"
             [class.active]="currentSlide === i"
             (click)="goToSlide(i)"
           ></span>
+          }
         </div>
       </div>
     </section>
@@ -119,11 +95,42 @@
         <div class="hero-text">
           <h1>{{ "HERO.TITLE" | translate }}</h1>
           <p>{{ "HERO.DESCRIPTION" | translate }}</p>
-          <button class="primary-btn" (click)="showGallery()">
-            {{ "HERO.BUTTON" | translate }}
+          <button
+            class="primary-btn"
+            [class.primary-btn--active]="isGalleryOpen"
+            (click)="toggleGallery()"
+          >
+            @if (isGalleryOpen) { @if (currentLang === 'ru') { Скрыть галерею }
+            @else if (currentLang === 'he') { הסתר גלריה } @else { Hide Gallery
+            } } @else { @if (currentLang === 'ru') { Показать галерею } @else if
+            (currentLang === 'he') { הצג גלריה } @else { Show Gallery } }
           </button>
         </div>
       </section>
+
+      <!-- Gallery Accordion -->
+      <div
+        class="gallery-accordion"
+        [class.gallery-accordion--visible]="isGalleryOpen"
+      >
+        @if (isGalleryOpen) {
+        <div class="gallery-accordion-content">
+          <div class="gallery-scroll">
+            <div class="gallery-items">
+              @for (img of galleryImages; track img; let i = $index) {
+              <div
+                class="gallery-item"
+                (click)="openImageModal(img.src, img.alt)"
+                [style.animationDelay]="i * 0.05 + 's'"
+              >
+                <img [src]="img.src" [alt]="img.alt" />
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+        }
+      </div>
 
       <!-- Pricing section -->
       <section class="pricing-section">

@@ -237,22 +237,27 @@ export class AppComponent implements OnInit, AfterViewInit {
     };
   }
 
-  // Method for setting preferred contact method
+  // Method for changing preference contact type
   setPreferredContact(type: string) {
     this.formData.preferredContact = type;
   }
 
-  // Method for displaying gallery
+  // Toggle gallery visibility
+  toggleGallery() {
+    this.isGalleryOpen = !this.isGalleryOpen;
+  }
+
+  // Display the gallery
   showGallery() {
     this.isGalleryOpen = true;
   }
 
-  // Closing gallery
+  // Hide the gallery
   closeGallery() {
     this.isGalleryOpen = false;
   }
 
-  // Open enlarged image
+  // Open an image in full-screen mode
   openImageModal(src: string, alt: string) {
     this.selectedImage = src;
     this.selectedImageAlt = alt;

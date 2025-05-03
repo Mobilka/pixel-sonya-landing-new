@@ -107,11 +107,11 @@ header {
   height: 100px; /* Fixed header height */
   display: flex;
   align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
   z-index: 1000;
+  position: fixed; /* Фиксированный заголовок */
+  top: 0; /* Прикреплен к верху */
+  left: 0; /* Прикреплен к левому краю */
+  right: 0; /* Прикреплен к правому краю */
 }
 
 nav {
@@ -121,36 +121,49 @@ nav {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
-  position: relative;
-  justify-content: space-between; /* Space between left and right nav sections */
+  justify-content: space-between; /* Центрируем логотип */
 }
 
 /* Force navigation layout to be the same in all languages */
 [dir="rtl"] nav {
-  flex-direction: row !important; /* Explicitly override RTL direction */
+  flex-direction: row !important; /* Явно переопределяем RTL направление */
+  justify-content: center !important;
 }
 
-/* Left navigation part */
+/* Left navigation part - абсолютное позиционирование, чтобы всегда быть слева */
 .nav-left {
   display: flex;
   align-items: center;
-  width: 40%;
   justify-content: flex-start;
+  position: absolute;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  /* Фиксированное положение слева */
+  left: 2rem !important;
+  right: auto !important;
+}
+
+/* Force same layout in RTL */
+[dir="rtl"] .nav-left {
+  left: 2rem !important; /* Всегда слева */
+  right: auto !important; /* Не справа */
+  /* Дополнительная фиксация */
+  position: absolute !important;
+  direction: ltr !important;
 }
 
 /* Right navigation part */
 .nav-right {
   display: flex;
   align-items: center;
-  width: 60%;
   justify-content: center;
+  height: 100%; /* Полная высота */
+  width: auto;
 }
 
 /* Force same layout in RTL */
-[dir="rtl"] .nav-left {
-  justify-content: flex-start !important;
-}
-
 [dir="rtl"] .nav-right {
   justify-content: center !important;
 }
@@ -165,11 +178,10 @@ nav {
 }
 
 .logo img {
-  height: 70%;
+  height: auto;
+  max-height: 100%;
   width: auto;
   object-fit: contain;
-  max-height: 100%;
-  max-width: 200px;
 }
 
 /* Language switcher styles */
@@ -177,13 +189,44 @@ nav {
   display: flex;
   gap: 10px;
   direction: ltr !important; /* Force LTR direction inside */
+  flex: 0 0 auto; /* Don't grow, don't shrink */
+  margin: 0;
+  padding: 0;
 }
 
 /* Force language switcher to maintain LTR order in all modes */
 [dir="rtl"] .language-switcher {
   direction: ltr !important; /* Force LTR direction inside */
+  flex: 0 0 auto !important; /* Reinforce no grow, no shrink */
 }
 
+/* Ensure fixed order of language buttons */
+.language-switcher .lang-en {
+  order: 1;
+}
+
+.language-switcher .lang-ru {
+  order: 2;
+}
+
+.language-switcher .lang-he {
+  order: 3;
+}
+
+/* Force the same order in RTL */
+[dir="rtl"] .language-switcher .lang-en {
+  order: 1 !important;
+}
+
+[dir="rtl"] .language-switcher .lang-ru {
+  order: 2 !important;
+}
+
+[dir="rtl"] .language-switcher .lang-he {
+  order: 3 !important;
+}
+
+/* Упрощаем кнопки переключателя языка */
 .language-switcher button {
   background-color: #f9f9f9;
   border: 1px solid #e0e0e0;
@@ -197,6 +240,13 @@ nav {
   min-width: 40px;
   text-align: center;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Явно удаляем любые неожиданные стили для кнопок в RTL */
+[dir="rtl"] .nav-left .language-switcher button {
+  margin: 0 !important;
+  float: none !important;
+  text-align: center !important;
 }
 
 .language-switcher button.active {
@@ -229,7 +279,8 @@ nav {
   flex: 1;
   width: 100%;
   background-color: #fff;
-  margin-top: 100px; /* Adding top margin equal to header height */
+  margin-top: 100px; /* Отступ сверху равен высоте заголовка */
+  padding-top: 0;
 }
 
 /* Slideshow styles */
@@ -415,6 +466,18 @@ nav {
 .primary-btn:hover, .submit-btn:hover {
   background-color: #F4E1D7;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.primary-btn--active {
+  background-color: #F4E1D7;
+  border-color: #E6997D;
+  box-shadow: 0 3px 8px rgba(230, 153, 125, 0.3);
+  transform: translateY(-2px);
+}
+
+.primary-btn--active:hover {
+  background-color: #E6997D;
+  color: #fff;
 }
 
 /* Styles for pricing section */
@@ -771,27 +834,64 @@ nav {
   }
   
   .logo {
-    margin-right: 10px; /* Less margin on mobile */
-    width: 160px; /* Smaller width on mobile */
-    height: auto;
+    height: 100%;
+    padding: 5px 0;
   }
   
   .logo img {
-    height: 40px;
+    max-height: 100%;
     max-width: 160px;
   }
   
   header {
     height: auto;
     min-height: 80px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
   }
   
   nav {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
+    position: relative;
+    justify-content: space-between;
+  }
+  
+  .nav-left {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+  
+  .nav-right {
+    justify-content: center;
+    height: 100%;
+    width: auto;
+  }
+  
+  [dir="rtl"] .nav-left {
+    left: 0.5rem !important;
+    right: auto !important;
+  }
+  
+  [dir="rtl"] .nav-right {
+    justify-content: center !important;
+  }
+  
+  .language-switcher {
+    gap: 5px;
+  }
+  
+  .language-switcher button {
+    padding: 5px 8px;
+    font-size: 12px;
+    min-width: 35px;
   }
 }
 
-/* Adaptation for mobile devices */
 @media (max-width: 480px) {
   .contact-bubble,
   a.contact-bubble,
@@ -862,17 +962,31 @@ nav {
   }
   
   .logo {
-    margin-right: 5px; /* Even less margin on smallest screens */
-    width: 140px; /* Smaller width on smallest screens */
+    height: 100%;
+    padding: 3px 0;
   }
   
   .logo img {
-    height: 35px;
+    height: auto;
+    max-height: 100%;
     max-width: 140px;
   }
   
   nav {
-    padding: 0.5rem;
+    padding: 0.3rem;
+    justify-content: space-between;
+  }
+  
+  .nav-left {
+    position: absolute;
+    left: 0.3rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  [dir="rtl"] .nav-left {
+    left: 0.3rem !important;
+    right: auto !important;
   }
   
   .language-switcher {
@@ -884,9 +998,22 @@ nav {
     font-size: 11px;
     min-width: 30px;
   }
+  
+  header {
+    height: auto;
+    min-height: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  .content-wrapper {
+    margin-top: 70px; /* Reduce margin on smallest screens */
+  }
 }
 
-/* Для планшетов также изменим кнопки на круглые, но большего размера */
+/* For tablets, we'll also change the buttons to round ones, but larger */
 @media (min-width: 481px) and (max-width: 768px) {
   .contact-bubble,
   a.contact-bubble,
@@ -1034,7 +1161,6 @@ footer {
   
   nav {
     padding: 0 1rem;
-    position: relative;
     justify-content: space-between;
     flex-direction: row !important; /* Ensure nav remains horizontal */
   }
@@ -1111,12 +1237,40 @@ footer {
   }
   
   nav {
-    justify-content: flex-end; /* Keep items right-aligned */
     padding: 0.5rem;
+    justify-content: space-between;
+  }
+  
+  .nav-left {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+  
+  .nav-right {
+    justify-content: center;
+    height: 100%;
+    width: auto;
+  }
+  
+  [dir="rtl"] .nav-left {
+    left: 0.5rem !important;
+    right: auto !important;
+  }
+  
+  [dir="rtl"] .nav-right {
+    justify-content: center !important;
+  }
+  
+  .logo {
+    height: 100%;
+    padding: 5px 0;
   }
   
   .logo img {
-    height: 40px;
+    max-height: 100%;
     max-width: 160px;
   }
   
@@ -1130,13 +1284,8 @@ footer {
     min-width: 35px;
   }
   
-  header {
-    height: auto;
-    min-height: 80px;
-  }
-  
   .content-wrapper {
-    margin-top: 80px; /* Reduce padding on mobile */
+    margin-top: 80px; /* Reduce margin on mobile */
     padding-top: 0; /* Remove top padding since slideshow will be first element */
   }
   
@@ -1187,8 +1336,14 @@ footer {
     padding: 0; /* Remove padding */
   }
   
+  .logo {
+    height: 100%;
+    padding: 3px 0;
+  }
+  
   .logo img {
-    height: 35px;
+    height: auto;
+    max-height: 100%;
     max-width: 140px;
   }
   
@@ -1200,6 +1355,10 @@ footer {
     padding: 3px 6px;
     font-size: 11px;
     min-width: 30px;
+  }
+  
+  .content-wrapper {
+    margin-top: 70px; /* Reduce margin on smallest screens */
   }
 }
 
@@ -1621,10 +1780,220 @@ html {
   transform: none !important;
 }
 
-/* Модификации для мобильной версии */
+/* Modifications for mobile version */
 @media (max-width: 768px) {
   .hero-section, .pricing-section, .contact-section, .location-section,
   .pricing-card, .contact-bubble, .form-group, .map-container {
     transition-duration: 0.6s;
   }
+}
+
+/* Styles for gallery accordion */
+.gallery-accordion {
+  width: 100%;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 2px 8px 0 rgba(180, 140, 255, 0.07);
+  margin-top: 0;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 1rem;
+  transition: all 0.5s ease-in-out;
+  pointer-events: none;
+}
+
+.gallery-accordion--visible {
+  opacity: 1;
+  max-height: 2000px;
+  padding: 1.5rem 1rem;
+  margin-bottom: 1rem;
+  pointer-events: auto;
+}
+
+.gallery-accordion-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.gallery-accordion-title {
+  font-size: 1.7rem;
+  color: var(--accent-color);
+  font-family: "Inter", "Alef", Arial, sans-serif;
+  font-weight: 700;
+  margin-bottom: 0;
+  text-align: right;
+}
+
+.gallery-accordion-status {
+  font-size: 0.8rem;
+  color: var(--accent-color);
+  opacity: 0.8;
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+.gallery-accordion-toggle {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.gallery-accordion-toggle--open {
+  transform: rotate(180deg);
+}
+
+.gallery-accordion-toggle-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 2px;
+  background-color: white;
+  transition: transform 0.3s;
+}
+
+.gallery-accordion-toggle-icon::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  transform: rotate(90deg);
+  transition: transform 0.3s;
+}
+
+.gallery-accordion-toggle--open .gallery-accordion-toggle-icon::before {
+  transform: rotate(0);
+}
+
+.gallery-accordion-content {
+  margin-top: 1.5rem;
+  animation: fadeInContent 0.8s ease-in-out;
+}
+
+@keyframes fadeInContent {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gallery-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.5rem 0;
+}
+
+.gallery-items {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.gallery-item {
+  min-width: 200px;
+  height: 200px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: fadein-gallery-item 0.7s both;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px 0 rgba(180, 140, 255, 0.1);
+}
+
+.gallery-item:hover {
+  transform: scale(1.04) rotate(-1deg);
+}
+
+.gallery-item:hover img {
+  box-shadow: 0 4px 16px 0 rgba(180, 140, 255, 0.18);
+}
+
+@keyframes fadein-gallery-item {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Scrollbar styling for gallery */
+.gallery-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.gallery-scroll::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
+.gallery-scroll::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 10px;
+}
+
+.gallery-scroll::-webkit-scrollbar-thumb:hover {
+  background: #b488ff;
+}
+
+@media (max-width: 600px) {
+  .gallery-accordion {
+    border-radius: 12px;
+  }
+
+  .gallery-accordion-title {
+    font-size: 1.2rem;
+  }
+
+  .gallery-item {
+    min-width: 140px;
+    height: 140px;
+  }
+}
+
+/* Force RTL reset for header elements */
+[dir="rtl"] header {
+  direction: ltr !important;
+}
+
+[dir="rtl"] header * {
+  direction: inherit;
+}
+
+/* RTL support for right-to-left languages (Hebrew) */
+[dir="rtl"] .hero-text,
+[dir="rtl"] .pricing-card h3,
+[dir="rtl"] .pricing-card .features {
+  text-align: right;
+  direction: rtl;
 } 
