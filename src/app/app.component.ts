@@ -4,7 +4,11 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import {
+  DomSanitizer,
+  SafeResourceUrl,
+  Title,
+} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +25,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'Pixel Sonya';
+
+  // Page titles based on language
+  pageTitles = {
+    en: 'Pixel Sonya Photography | Professional Photographer',
+    ru: 'Pixel Sonya Photography | Профессиональный Фотограф',
+    he: 'Pixel Sonya Photography | צלמת מקצועית',
+  };
 
   // Supported languages
   langs = ['he', 'en', 'ru'];
@@ -86,7 +97,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(
     private translate: TranslateService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private titleService: Title
   ) {
     // Setting default language and available languages
     translate.addLangs(this.langs);
@@ -95,6 +107,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     // Map URL initialization
     this.updateMapUrl('he');
+
+    // Set initial page title
+    this.updatePageTitle('he');
   }
 
   ngOnInit() {
@@ -129,6 +144,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     // Animation disabled
   }
 
+  // Update page title based on selected language
+  updatePageTitle(lang: string) {
+    this.titleService.setTitle(
+      this.pageTitles[lang as keyof typeof this.pageTitles] ||
+        this.pageTitles['en']
+    );
+  }
+
   // Method for changing language
   changeLanguage(lang: string) {
     this.translate.use(lang);
@@ -136,6 +159,9 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     // Updating map URL when changing language
     this.updateMapUrl(lang);
+
+    // Update the page title
+    this.updatePageTitle(lang);
 
     // Setting text direction (RTL for Hebrew)
     const htmlTag = document.getElementsByTagName('html')[0] as HTMLHtmlElement;
