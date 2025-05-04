@@ -57,7 +57,8 @@
     "TITLE": "Work Gallery"
   },
   "FOOTER": {
-    "COPYRIGHT": "© 2025 Pixel Sonya. All rights reserved."
+    "COPYRIGHT": "© 2025 Pixel Sonya. All rights reserved.",
+    "ADMIN": "Admin"
   },
   "LANGUAGE": {
     "HE": "Hebrew",
