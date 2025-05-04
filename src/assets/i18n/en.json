@@ -3,14 +3,14 @@
     "TITLE": "Pixel Sonya"
   },
   "HERO": {
-    "TITLE": "Design Services",
-    "DESCRIPTION": "Creative design and development for your business and online projects. Professional solution for corporate identity, websites, and marketing materials creation. Individual approach to each client, transparent pricing, and quality-guaranteed work.",
-    "BUTTON": "Show Gallery"
+    "TITLE": "Your story in every pixel",
+    "DESCRIPTION": "Hi, I'm Sonya! I specialize in authentic family photography, joyful children's portraits, and meaningful Bar/Bat Mitzvah celebrations. With a fresh and warm approach, I create timeless images that tell your unique story. Each photo session is tailored to capture genuine emotions and create memories that last a lifetime.",
+    "BUTTON": "View Gallery"
   },
   "PRICING": {
     "TITLE": "Popular",
     "PRO": {
-      "TITLE": "Professional Package",
+      "TITLE": "Premium Package",
       "PRICE": "₪1,350",
       "FEATURES": {
         "FEATURE1": "About 2 hours of shooting",
@@ -28,7 +28,7 @@
       }
     },
     "LIGHT": {
-      "TITLE": "Children Package",
+      "TITLE": "Kids' Package",
       "PRICE": "₪650",
       "FEATURES": {
         "FEATURE1": "About 1 hour of shooting",
@@ -38,17 +38,16 @@
     }
   },
   "CONTACT": {
-    "TITLE": "Leave a Request",
+    "TITLE": "Leave a message",
     "DESCRIPTION": "Fill out the form and we'll get back to you as soon as possible",
-    "PREFERRED": "Preferred contact method:",
     "FORM": {
       "NAME": "Your name",
       "PHONE": "Phone number",
       "EMAIL": "Email",
-      "MESSAGE": "Describe your task or question",
+      "MESSAGE": "Let us know what you'd like to know or when you'd like to schedule a photoshoot",
       "SUBMIT": "Submit"
     },
-    "SUCCESS": "Thank you! Your request has been sent. We'll contact you soon."
+    "SUCCESS": "Thank you! Your message has been sent. We'll contact you soon."
   },
   "LOCATION": {
     "TITLE": "How to Find Us",
@@ -58,7 +57,8 @@
     "TITLE": "Work Gallery"
   },
   "FOOTER": {
-    "COPYRIGHT": "© 2024 Pixel Sonya. All rights reserved."
+    "COPYRIGHT": "© 2025 Pixel Sonya. All rights reserved.",
+    "ADMIN": "Admin"
   },
   "LANGUAGE": {
     "HE": "Hebrew",

@@ -1104,6 +1104,7 @@ footer {
   padding: 1.5rem 2rem;
   width: 100%;
   border-top: 1px solid #E6C7B7;
+  display: flex;
 }
 
 /* Adaptability */

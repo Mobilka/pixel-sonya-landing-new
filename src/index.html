@@ -1,21 +1,167 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Pixel Sonya - Дизайн и разработка</title>
+    <title>Pixel Sonya Photography | Professional Photographer</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <meta
+      name="description"
+      content="Professional photography services by Pixel Sonya. Capturing your special moments with style and creativity."
+    />
+    <!-- Favicon configuration -->
+    <!-- Standard favicon and SVG -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="assets/favicon/insta-style-icon.svg"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="assets/favicon/insta-style-icon.svg"
+      sizes="192x192"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="assets/favicon/insta-style-icon.svg"
+      sizes="32x32"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="assets/favicon/insta-style-icon.svg"
+      sizes="16x16"
+    />
+
+    <!-- iOS icons -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/favicon/insta-style-icon.svg"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="152x152"
+      href="assets/favicon/insta-style-icon.svg"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="120x120"
+      href="assets/favicon/insta-style-icon.svg"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="assets/favicon/insta-style-icon.svg"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="60x60"
+      href="assets/favicon/insta-style-icon.svg"
+    />
+
+    <!-- Android icons -->
+    <link rel="manifest" href="assets/site.webmanifest" />
+
+    <!-- Windows tiles -->
+    <meta
+      name="msapplication-TileImage"
+      content="assets/favicon/insta-style-icon.svg"
+    />
+    <meta name="msapplication-TileColor" content="#e6c7b7" />
+    <meta name="msapplication-config" content="assets/browserconfig.xml" />
+    <meta name="theme-color" content="#e6c7b7" />
+
+    <!-- Safari pinned tab icon -->
+    <link
+      rel="mask-icon"
+      href="assets/favicon/insta-style-icon.svg"
+      color="#e6c7b7"
+    />
+
+    <!-- Font Awesome for icons -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
+    <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Inline CSS to style the favicon better when it's shown in tab -->
+    <style>
+      /* This can help with favicon appearance in browser tabs */
+      @media (prefers-color-scheme: dark) {
+        link[rel="icon"] {
+          filter: drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.3));
+        }
+      }
+
+      /* Adjust favicon spacing */
+      link[rel="icon"] {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+
+    <!-- Meta tags for SEO -->
+    <meta
+      name="keywords"
+      content="photographer, Israel, portrait, family, business, events, professional"
+    />
+    <meta name="author" content="Pixel Sonya" />
+
+    <!-- Open Graph data for social sharing -->
+    <meta property="og:title" content="Pixel Sonya Photography" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://pixelsonya.com/" />
+    <meta
+      property="og:image"
+      content="https://pixelsonya.com/assets/logo.png"
+    />
+    <meta
+      property="og:description"
+      content="Professional photographer in Israel. Family portraits, business photos, and special events photography."
+    />
+    <meta property="og:site_name" content="Pixel Sonya Photography" />
+
+    <!-- Preconnect to Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Load the Roboto and Alef fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alef:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Disable animation and transitions for users who prefer reduced motion -->
+    <style>
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
   </head>
   <body>
     <app-root></app-root>
+
+    <!-- Footer will be generated by Angular -->
+    <!-- The common footer with admin link is hidden in app.component.html -->
   </body>
 </html>

@@ -224,7 +224,7 @@
                   ></path>
                 </svg>
               </div>
-              <span class="contact-info">052-728-4388</span>
+              <span class="contact-info">{{ contactInfo.phone }}</span>
             </a>
             <a
               class="contact-bubble chat mobile-only"
@@ -248,62 +248,70 @@
                   ></path>
                 </svg>
               </div>
-              <span class="contact-info">{{ "CONTACT.CHAT" | translate }}</span>
+              <span class="contact-info">WhatsApp</span>
             </a>
           </div>
         </div>
 
+        <!-- Contact form -->
         <div class="contact-container">
-          <form class="contact-form" (ngSubmit)="onSubmit()">
+          <form
+            class="contact-form"
+            (ngSubmit)="onSubmit()"
+            #contactForm="ngForm"
+          >
             <div class="form-group">
               <input
                 type="text"
-                placeholder="{{ 'CONTACT.FORM.NAME' | translate }}"
                 name="name"
                 [(ngModel)]="formData.name"
                 required
-              />
-            </div>
-            <div class="form-group">
-              <input
-                type="tel"
-                placeholder="{{ 'CONTACT.FORM.PHONE' | translate }}"
-                name="phone"
-                [(ngModel)]="formData.phone"
-                required
-                class="phone-input"
-                [style.textAlign]="currentLang === 'he' ? 'right' : 'left'"
+                placeholder="{{ 'CONTACT.FORM.NAME' | translate }}"
               />
             </div>
             <div class="form-group">
               <input
                 type="email"
-                placeholder="{{ 'CONTACT.FORM.EMAIL' | translate }}"
                 name="email"
                 [(ngModel)]="formData.email"
                 required
+                placeholder="{{ 'CONTACT.FORM.EMAIL' | translate }}"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="tel"
+                name="phone"
+                [(ngModel)]="formData.phone"
+                class="phone-input"
+                placeholder="{{ 'CONTACT.FORM.PHONE' | translate }}"
               />
             </div>
             <div class="form-group">
               <textarea
-                placeholder="{{ 'CONTACT.FORM.MESSAGE' | translate }}"
                 name="message"
                 [(ngModel)]="formData.message"
-                rows="4"
+                rows="5"
+                required
+                placeholder="{{ 'CONTACT.FORM.MESSAGE' | translate }}"
               ></textarea>
             </div>
-
-            <button type="submit" class="submit-btn">
+            <button
+              type="submit"
+              class="submit-btn"
+              [disabled]="!contactForm.form.valid"
+            >
               {{ "CONTACT.FORM.SUBMIT" | translate }}
             </button>
           </form>
         </div>
       </section>
 
-      <!-- Map and address -->
+      <!-- Map section -->
       <section class="location-section">
         <h2>{{ "LOCATION.TITLE" | translate }}</h2>
         <div class="map-container">
+          <!-- Google map iframe with coordinates -->
           <iframe
             [src]="mapUrl"
             width="100%"
@@ -312,17 +320,21 @@
             allowfullscreen=""
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
-          >
-          </iframe>
+          ></iframe>
         </div>
-        <p class="address">{{ "LOCATION.ADDRESS" | translate }}</p>
+        <div class="address">
+          {{ "LOCATION.ADDRESS" | translate }}
+        </div>
       </section>
     </main>
   </div>
 
   <footer>
-    <p>{{ "FOOTER.COPYRIGHT" | translate }}</p>
+    <div>{{ "FOOTER.COPYRIGHT" | translate }} © {{ title }} 2024</div>
+    <div>
+      <a [routerLink]="['/admin']" class="admin-link">{{
+        "FOOTER.ADMIN" | translate
+      }}</a>
+    </div>
   </footer>
 </div>
-
-<router-outlet></router-outlet>
