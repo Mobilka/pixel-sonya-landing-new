@@ -8,15 +8,8 @@ export const ADMIN_ROUTES: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'slideshow',
+        redirectTo: 'gallery',
         pathMatch: 'full',
-      },
-      {
-        path: 'slideshow',
-        loadComponent: () =>
-          import('./components/slideshow-admin/slideshow-admin.component').then(
-            (m) => m.SlideshowAdminComponent
-          ),
       },
       {
         path: 'gallery',

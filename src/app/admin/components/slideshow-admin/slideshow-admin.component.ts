@@ -2,34 +2,43 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService, SlideImage } from '../../services/admin.service';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-slideshow-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   template: `
     <div class="admin-panel">
-      <h2>Управление слайдшоу</h2>
+      <h2>{{ 'ADMIN.GALLERY.SLIDESHOW' | translate }}</h2>
 
       <div class="current-items">
-        <h3>Текущие слайды</h3>
+        <h3>
+          {{
+            'ADMIN.GALLERY.SLIDESHOW_SELECTED'
+              | translate : { count: slides.length }
+          }}
+        </h3>
         <div class="items-grid">
           <div class="item-card" *ngFor="let slide of slides">
             <div class="item-image">
               <img [src]="slide.image" [alt]="slide.alt" />
             </div>
             <div class="item-details">
-              <p><strong>Описание:</strong> {{ slide.alt }}</p>
+              <p>
+                <strong>{{ 'ADMIN.GALLERY.DESCRIPTION' | translate }}</strong>
+                {{ slide.alt }}
+              </p>
             </div>
             <div class="item-actions">
               <button class="action-btn edit-btn" (click)="editSlide(slide)">
-                Редактировать
+                {{ 'ADMIN.GALLERY.EDIT' | translate }}
               </button>
               <button
                 class="action-btn delete-btn"
                 (click)="deleteSlide(slide.id!)"
               >
-                Удалить
+                {{ 'ADMIN.GALLERY.DELETE' | translate }}
               </button>
             </div>
           </div>
@@ -37,13 +46,15 @@ import { AdminService, SlideImage } from '../../services/admin.service';
       </div>
 
       <div class="add-form" *ngIf="!isEditing">
-        <h3>Добавить новый слайд</h3>
+        <h3>{{ 'ADMIN.GALLERY.ADD_NEW' | translate }}</h3>
         <div class="form-group">
-          <label for="new-alt">Описание:</label>
+          <label for="new-alt">{{
+            'ADMIN.GALLERY.DESCRIPTION' | translate
+          }}</label>
           <input type="text" id="new-alt" [(ngModel)]="newSlide.alt" />
         </div>
         <div class="form-group">
-          <label for="new-image">Изображение:</label>
+          <label for="new-image">{{ 'ADMIN.GALLERY.IMAGE' | translate }}</label>
           <input
             type="file"
             id="new-image"
@@ -52,21 +63,28 @@ import { AdminService, SlideImage } from '../../services/admin.service';
           />
         </div>
         <div class="image-preview" *ngIf="imagePreview">
-          <img [src]="imagePreview" alt="Предпросмотр" />
+          <img
+            [src]="imagePreview"
+            alt="{{ 'ADMIN.GALLERY.PREVIEW' | translate }}"
+          />
         </div>
         <button class="action-btn add-btn" (click)="addSlide()">
-          Добавить слайд
+          {{ 'ADMIN.GALLERY.ADD_BUTTON' | translate }}
         </button>
       </div>
 
       <div class="edit-form" *ngIf="isEditing">
-        <h3>Редактировать слайд</h3>
+        <h3>{{ 'ADMIN.GALLERY.EDIT_IMAGE' | translate }}</h3>
         <div class="form-group">
-          <label for="edit-alt">Описание:</label>
+          <label for="edit-alt">{{
+            'ADMIN.GALLERY.DESCRIPTION' | translate
+          }}</label>
           <input type="text" id="edit-alt" [(ngModel)]="editingSlide.alt" />
         </div>
         <div class="form-group">
-          <label for="edit-image">Изображение:</label>
+          <label for="edit-image">{{
+            'ADMIN.GALLERY.IMAGE' | translate
+          }}</label>
           <input
             type="file"
             id="edit-image"
@@ -75,14 +93,17 @@ import { AdminService, SlideImage } from '../../services/admin.service';
           />
         </div>
         <div class="image-preview">
-          <img [src]="imagePreview || editingSlide.image" alt="Предпросмотр" />
+          <img
+            [src]="imagePreview || editingSlide.image"
+            alt="{{ 'ADMIN.GALLERY.PREVIEW' | translate }}"
+          />
         </div>
         <div class="edit-actions">
           <button class="action-btn save-btn" (click)="saveEdit()">
-            Сохранить
+            {{ 'ADMIN.GALLERY.SAVE' | translate }}
           </button>
           <button class="action-btn cancel-btn" (click)="cancelEdit()">
-            Отмена
+            {{ 'ADMIN.GALLERY.CANCEL' | translate }}
           </button>
         </div>
       </div>
@@ -257,7 +278,7 @@ import { AdminService, SlideImage } from '../../services/admin.service';
         gap: 0.5rem;
       }
 
-      /* Адаптивные стили для планшетов */
+      /* Responsive styles for tablets */
       @media (max-width: 768px) {
         .admin-panel {
           padding: 1.5rem;
@@ -283,7 +304,7 @@ import { AdminService, SlideImage } from '../../services/admin.service';
         }
       }
 
-      /* Адаптивные стили для мобильных устройств */
+      /* Responsive styles for mobile devices */
       @media (max-width: 480px) {
         .admin-panel {
           padding: 1rem;
@@ -348,7 +369,10 @@ export class SlideshowAdminComponent implements OnInit {
   imagePreview: string | null = null;
   selectedFile: File | null = null;
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private translateService: TranslateService
+  ) {}
 
   ngOnInit() {
     this.loadSlides();
@@ -365,7 +389,7 @@ export class SlideshowAdminComponent implements OnInit {
     if (element.files && element.files.length > 0) {
       this.selectedFile = element.files[0];
 
-      // Создаем превью изображения
+      // Create image preview
       const reader = new FileReader();
       reader.onload = (e) => {
         this.imagePreview = e.target?.result as string;
@@ -376,12 +400,12 @@ export class SlideshowAdminComponent implements OnInit {
 
   addSlide() {
     if (!this.selectedFile || !this.newSlide.alt) {
-      alert('Пожалуйста, заполните все поля и выберите изображение');
+      alert('Please fill in all fields and select an image');
       return;
     }
 
-    // В реальном приложении здесь был бы запрос на загрузку файла
-    // Сейчас имитируем загрузку
+    // In a real application, here would be a request to upload the file
+    // Now we simulate upload
     this.adminService.uploadFile(this.selectedFile).subscribe((response) => {
       if (response.success) {
         const slide: SlideImage = {
@@ -392,7 +416,6 @@ export class SlideshowAdminComponent implements OnInit {
         this.adminService.addSlide(slide).subscribe(() => {
           this.resetForm();
           this.loadSlides();
-          alert('Слайд успешно добавлен');
         });
       }
     });
@@ -407,12 +430,12 @@ export class SlideshowAdminComponent implements OnInit {
 
   saveEdit() {
     if (!this.editingSlide.alt) {
-      alert('Пожалуйста, заполните описание');
+      alert('Please fill in the description');
       return;
     }
 
     if (this.selectedFile) {
-      // Если файл был выбран, загружаем его
+      // If a file was selected, upload it
       this.adminService.uploadFile(this.selectedFile).subscribe((response) => {
         if (response.success) {
           this.editingSlide.image = response.filePath;
@@ -420,7 +443,7 @@ export class SlideshowAdminComponent implements OnInit {
         }
       });
     } else {
-      // Если файл не был выбран, просто обновляем данные
+      // If no file was selected, just update the data
       this.updateSlide();
     }
   }
@@ -429,15 +452,13 @@ export class SlideshowAdminComponent implements OnInit {
     this.adminService.updateSlide(this.editingSlide).subscribe(() => {
       this.cancelEdit();
       this.loadSlides();
-      alert('Слайд успешно обновлен');
     });
   }
 
   deleteSlide(id: string) {
-    if (confirm('Вы уверены, что хотите удалить этот слайд?')) {
+    if (confirm('Are you sure you want to delete this slide?')) {
       this.adminService.deleteSlide(id).subscribe(() => {
         this.loadSlides();
-        alert('Слайд успешно удален');
       });
     }
   }

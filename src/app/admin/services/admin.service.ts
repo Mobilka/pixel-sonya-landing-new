@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 
 export interface SlideImage {
   id?: string;
@@ -45,27 +45,20 @@ export class AdminService {
   hero$ = this.heroSubject.asObservable();
   contacts$ = this.contactsSubject.asObservable();
 
-  // Временные данные до подключения реального API
-  private tempSlideshow: SlideImage[] = [
-    { id: '1', image: 'assets/Sonya.png', alt: 'Portrait of Sonya' },
-    { id: '2', image: 'assets/logo.png', alt: 'Pixel Sonya Logo' },
-    { id: '3', image: 'assets/Sonya.png', alt: 'Sonya working' },
-    { id: '4', image: 'assets/logo.png', alt: 'Pixel Sonya Works' },
-  ];
+  // Keys for LocalStorage
+  private GALLERY_KEY = 'gallery';
+  private SLIDESHOW_KEY = 'slideshow';
+  private API_BASE_URL = 'http://localhost:3002'; // Updated to match current server port
 
-  private tempGallery: GalleryImage[] = Array.from({ length: 10 }, (_, i) => {
-    const isEven = i % 2 === 0;
-    return {
-      id: String(i + 1),
-      src: isEven ? 'assets/Sonya.png' : 'assets/logo.png',
-      alt: `${isEven ? 'Sonya' : 'Logo'} - example ${i + 1}`,
-    };
-  });
+  // Temporary data until real API is connected
+  private tempSlideshow: SlideImage[] = [];
+
+  private tempGallery: GalleryImage[] = [];
 
   private tempHero: HeroContent = {
     title: 'Pixel Sonya Photography',
     description:
-      'Профессиональная фотография для вашего бизнеса и личных событий',
+      'Professional photography for your business and personal events',
   };
 
   private tempContacts: ContactInfo = {
@@ -74,77 +67,163 @@ export class AdminService {
   };
 
   constructor(private http: HttpClient) {
-    // Инициализация данных из временных переменных
+    // Clear slideshow on start
+    this.tempSlideshow = [];
+    localStorage.removeItem(this.SLIDESHOW_KEY);
+
+    // Initialize data from LocalStorage or temporary variables
+    const savedGallery = localStorage.getItem(this.GALLERY_KEY);
+
+    // If data exists in localStorage, use it
+    if (savedGallery) {
+      this.tempGallery = JSON.parse(savedGallery);
+    }
+
+    // Load gallery list from server
+    this.http.get<any>(`${this.API_BASE_URL}/api/gallery`).subscribe(
+      (response) => {
+        if (response.success && response.images && response.images.length > 0) {
+          console.log('Received response from server with gallery:', response);
+
+          // Create gallery objects based on files from server
+          const serverImages = response.images.map((img: any) => {
+            const src = img.path.startsWith('/assets/gallery/')
+              ? img.path
+              : '/assets/gallery/' + img.filename;
+            console.log('GalleryImage:', { id: img.filename, src });
+            return {
+              id: img.filename,
+              src,
+              alt:
+                img.filename
+                  .split('-')
+                  .slice(1)
+                  .join('-')
+                  .replace(/\.[^/.]+$/, '') || img.filename,
+            };
+          });
+
+          console.log('Transformed images:', serverImages);
+
+          // Update gallery
+          this.tempGallery = serverImages;
+          localStorage.setItem(
+            this.GALLERY_KEY,
+            JSON.stringify(this.tempGallery)
+          );
+          this.gallerySubject.next(this.tempGallery);
+        } else {
+          console.log(
+            'No images in server response or error in response structure'
+          );
+        }
+      },
+      (error) => {
+        console.error('Error loading gallery from server', error);
+      }
+    );
+
+    // Initialize observables
     this.slideshowSubject.next(this.tempSlideshow);
     this.gallerySubject.next(this.tempGallery);
     this.heroSubject.next(this.tempHero);
     this.contactsSubject.next(this.tempContacts);
   }
 
-  // Методы для работы со слайдшоу
+  // Methods for working with slideshow
   getSlideshow(): Observable<SlideImage[]> {
-    // В будущем здесь будет запрос к API
-    return of(this.tempSlideshow);
+    return this.getSlideshowIds().pipe(
+      map((ids) => {
+        const slides = this.tempGallery
+          .filter((img) => ids.includes(img.id!))
+          .map((img) => ({
+            id: img.id,
+            image: img.src,
+            alt: img.alt,
+          }));
+        this.tempSlideshow = slides;
+        this.slideshowSubject.next(this.tempSlideshow);
+        return this.tempSlideshow;
+      }),
+      catchError((err) => {
+        console.error('Error getting slideshow:', err);
+        return of([]);
+      })
+    );
   }
 
   addSlide(slide: SlideImage): Observable<SlideImage> {
-    // Имитация добавления слайда
-    const newId = String(this.tempSlideshow.length + 1);
-    const newSlide = { ...slide, id: newId };
-    this.tempSlideshow.push(newSlide);
-    this.slideshowSubject.next(this.tempSlideshow);
-    return of(newSlide);
+    // Add id to tempSlideshow only if it is not present
+    if (!this.tempSlideshow.some((s) => s.id === slide.id)) {
+      this.tempSlideshow.push(slide);
+      localStorage.setItem(
+        this.SLIDESHOW_KEY,
+        JSON.stringify(this.tempSlideshow)
+      );
+      this.slideshowSubject.next(this.tempSlideshow);
+      // Save id on server
+      this.setSlideshowIds(this.tempSlideshow.map((s) => s.id!)).subscribe();
+    }
+    return of(slide);
   }
 
   updateSlide(slide: SlideImage): Observable<SlideImage> {
-    // Имитация обновления слайда
     const index = this.tempSlideshow.findIndex((s) => s.id === slide.id);
     if (index !== -1) {
       this.tempSlideshow[index] = slide;
+      localStorage.setItem(
+        this.SLIDESHOW_KEY,
+        JSON.stringify(this.tempSlideshow)
+      );
       this.slideshowSubject.next([...this.tempSlideshow]);
     }
     return of(slide);
   }
 
   deleteSlide(id: string): Observable<boolean> {
-    // Имитация удаления слайда
     this.tempSlideshow = this.tempSlideshow.filter((s) => s.id !== id);
+    localStorage.setItem(
+      this.SLIDESHOW_KEY,
+      JSON.stringify(this.tempSlideshow)
+    );
     this.slideshowSubject.next(this.tempSlideshow);
+    // Save id on server
+    this.setSlideshowIds(this.tempSlideshow.map((s) => s.id!)).subscribe();
     return of(true);
   }
 
-  // Методы для работы с галереей
+  // Methods for working with gallery
   getGallery(): Observable<GalleryImage[]> {
     return of(this.tempGallery);
   }
 
   addImage(image: GalleryImage): Observable<GalleryImage> {
-    // Имитация добавления изображения
-    const newId = String(this.tempGallery.length + 1);
+    const newId = String(Date.now());
     const newImage = { ...image, id: newId };
     this.tempGallery.push(newImage);
+    localStorage.setItem(this.GALLERY_KEY, JSON.stringify(this.tempGallery));
     this.gallerySubject.next(this.tempGallery);
     return of(newImage);
   }
 
   updateImage(image: GalleryImage): Observable<GalleryImage> {
-    // Имитация обновления изображения
     const index = this.tempGallery.findIndex((img) => img.id === image.id);
     if (index !== -1) {
       this.tempGallery[index] = image;
+      localStorage.setItem(this.GALLERY_KEY, JSON.stringify(this.tempGallery));
       this.gallerySubject.next([...this.tempGallery]);
     }
     return of(image);
   }
 
   deleteImage(id: string): Observable<boolean> {
-    // Имитация удаления изображения
     this.tempGallery = this.tempGallery.filter((img) => img.id !== id);
+    localStorage.setItem(this.GALLERY_KEY, JSON.stringify(this.tempGallery));
     this.gallerySubject.next(this.tempGallery);
     return of(true);
   }
 
-  // Методы для работы с информацией в hero секции
+  // Methods for working with hero section information
   getHeroContent(): Observable<HeroContent> {
     return of(this.tempHero);
   }
@@ -155,7 +234,7 @@ export class AdminService {
     return of(this.tempHero);
   }
 
-  // Методы для работы с контактной информацией
+  // Methods for working with contact information
   getContactInfo(): Observable<ContactInfo> {
     return of(this.tempContacts);
   }
@@ -166,16 +245,47 @@ export class AdminService {
     return of(this.tempContacts);
   }
 
-  // Вспомогательный метод для загрузки файлов (будет реализован в будущем)
+  // Helper method for file upload (to be implemented in the future)
   uploadFile(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
 
-    // Здесь будет реальный запрос к API для загрузки файла
-    // Пока возвращаем имитацию успешной загрузки
-    return of({
-      success: true,
-      filePath: URL.createObjectURL(file),
-    });
+    // Send file to server for physical upload to assets/gallery folder
+    return this.http.post(`${this.API_BASE_URL}/api/upload`, formData).pipe(
+      tap((response) => console.log('Upload response:', response)),
+      catchError((error) => {
+        console.error('Error uploading file:', error);
+        return of({
+          success: false,
+          error: 'Error uploading file',
+        });
+      })
+    );
+  }
+
+  // Get list of ids for slideshow from server
+  getSlideshowIds(): Observable<string[]> {
+    return this.http
+      .get<{ success: boolean; ids: string[] }>(
+        `${this.API_BASE_URL}/api/slideshow`
+      )
+      .pipe(
+        map((res) => (Array.isArray(res.ids) ? res.ids : [])),
+        catchError((err) => {
+          console.error('Error getting slideshow ids:', err);
+          return of([]);
+        })
+      );
+  }
+
+  // Save list of ids for slideshow on server
+  setSlideshowIds(ids: string[]): Observable<any> {
+    return this.http.post(`${this.API_BASE_URL}/api/slideshow`, { ids }).pipe(
+      tap(() => console.log('Slideshow id list saved on server:', ids)),
+      catchError((err) => {
+        console.error('Error saving slideshow ids:', err);
+        return of({ success: false });
+      })
+    );
   }
 }

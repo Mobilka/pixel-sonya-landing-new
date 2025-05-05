@@ -1,35 +1,60 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminService, GalleryImage } from '../../services/admin.service';
+import {
+  AdminService,
+  GalleryImage,
+  SlideImage,
+} from '../../services/admin.service';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-gallery-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   template: `
     <div class="admin-panel">
-      <h2>Управление галереей</h2>
+      <h2>{{ 'ADMIN.GALLERY.TITLE' | translate }}</h2>
 
       <div class="current-items">
-        <h3>Текущие изображения в галерее</h3>
+        <h3>{{ 'ADMIN.GALLERY.GALLERY_TITLE' | translate }}</h3>
+        <p class="info-text">
+          {{
+            'ADMIN.GALLERY.TOTAL_PHOTOS'
+              | translate : { count: galleryImages.length }
+          }}
+        </p>
         <div class="items-grid">
           <div class="item-card" *ngFor="let image of galleryImages">
             <div class="item-image">
               <img [src]="image.src" [alt]="image.alt" />
             </div>
             <div class="item-details">
-              <p><strong>Описание:</strong> {{ image.alt }}</p>
+              <p>
+                <strong>{{ 'ADMIN.GALLERY.DESCRIPTION' | translate }}</strong>
+                {{ image.alt }}
+              </p>
+              <div class="slideshow-checkbox">
+                <input
+                  type="checkbox"
+                  [id]="'slideshow-' + image.id"
+                  [checked]="isInSlideshow(image.id)"
+                  [disabled]="
+                    !isInSlideshow(image.id) && slideshowIds.length >= 10
+                  "
+                  (change)="toggleSlideshow(image, $event)"
+                />
+                <label [for]="'slideshow-' + image.id">{{
+                  'ADMIN.GALLERY.SHOW_IN_SLIDESHOW' | translate
+                }}</label>
+              </div>
             </div>
             <div class="item-actions">
-              <button class="action-btn edit-btn" (click)="editImage(image)">
-                Редактировать
-              </button>
               <button
                 class="action-btn delete-btn"
                 (click)="deleteImage(image.id!)"
               >
-                Удалить
+                {{ 'ADMIN.GALLERY.DELETE' | translate }}
               </button>
             </div>
           </div>
@@ -37,13 +62,15 @@ import { AdminService, GalleryImage } from '../../services/admin.service';
       </div>
 
       <div class="add-form" *ngIf="!isEditing">
-        <h3>Добавить новое изображение</h3>
+        <h3>{{ 'ADMIN.GALLERY.ADD_NEW' | translate }}</h3>
         <div class="form-group">
-          <label for="new-alt">Описание:</label>
+          <label for="new-alt">{{
+            'ADMIN.GALLERY.DESCRIPTION' | translate
+          }}</label>
           <input type="text" id="new-alt" [(ngModel)]="newImage.alt" />
         </div>
         <div class="form-group">
-          <label for="new-image">Изображение:</label>
+          <label for="new-image">{{ 'ADMIN.GALLERY.IMAGE' | translate }}</label>
           <input
             type="file"
             id="new-image"
@@ -51,22 +78,39 @@ import { AdminService, GalleryImage } from '../../services/admin.service';
             accept="image/*"
           />
         </div>
+        <div class="slideshow-checkbox" *ngIf="slideshowImages.length < 10">
+          <input
+            type="checkbox"
+            id="new-in-slideshow"
+            [(ngModel)]="addToSlideshowOnCreate"
+          />
+          <label for="new-in-slideshow">{{
+            'ADMIN.GALLERY.ADD_TO_SLIDESHOW' | translate
+          }}</label>
+        </div>
         <div class="image-preview" *ngIf="imagePreview">
-          <img [src]="imagePreview" alt="Предпросмотр" />
+          <img
+            [src]="imagePreview"
+            alt="{{ 'ADMIN.GALLERY.PREVIEW' | translate }}"
+          />
         </div>
         <button class="action-btn add-btn" (click)="addImage()">
-          Добавить изображение
+          {{ 'ADMIN.GALLERY.ADD_BUTTON' | translate }}
         </button>
       </div>
 
       <div class="edit-form" *ngIf="isEditing">
-        <h3>Редактировать изображение</h3>
+        <h3>{{ 'ADMIN.GALLERY.EDIT_IMAGE' | translate }}</h3>
         <div class="form-group">
-          <label for="edit-alt">Описание:</label>
+          <label for="edit-alt">{{
+            'ADMIN.GALLERY.DESCRIPTION' | translate
+          }}</label>
           <input type="text" id="edit-alt" [(ngModel)]="editingImage.alt" />
         </div>
         <div class="form-group">
-          <label for="edit-image">Изображение:</label>
+          <label for="edit-image">{{
+            'ADMIN.GALLERY.IMAGE' | translate
+          }}</label>
           <input
             type="file"
             id="edit-image"
@@ -75,14 +119,17 @@ import { AdminService, GalleryImage } from '../../services/admin.service';
           />
         </div>
         <div class="image-preview">
-          <img [src]="imagePreview || editingImage.src" alt="Предпросмотр" />
+          <img
+            [src]="imagePreview || editingImage.src"
+            alt="{{ 'ADMIN.GALLERY.PREVIEW' | translate }}"
+          />
         </div>
         <div class="edit-actions">
           <button class="action-btn save-btn" (click)="saveEdit()">
-            Сохранить
+            {{ 'ADMIN.GALLERY.SAVE' | translate }}
           </button>
           <button class="action-btn cancel-btn" (click)="cancelEdit()">
-            Отмена
+            {{ 'ADMIN.GALLERY.CANCEL' | translate }}
           </button>
         </div>
       </div>
@@ -109,14 +156,39 @@ import { AdminService, GalleryImage } from '../../services/admin.service';
         color: #555;
       }
 
-      .current-items {
-        margin-bottom: 2rem;
+      .info-text {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 1rem;
       }
 
-      .items-grid {
+      .info-text.empty {
+        color: #999;
+        font-style: italic;
+      }
+
+      .current-items,
+      .slideshow-selection {
+        margin-bottom: 2rem;
+        background-color: #fafafa;
+        border-radius: 6px;
+        padding: 1.5rem;
+        border: 1px solid #eee;
+      }
+
+      .slideshow-selection {
+        background-color: #f9f4ff;
+      }
+
+      .items-grid,
+      .slideshow-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1.5rem;
+      }
+
+      .slideshow-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       }
 
       .item-card {
@@ -126,6 +198,11 @@ import { AdminService, GalleryImage } from '../../services/admin.service';
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         transition: transform 0.2s, box-shadow 0.2s;
         background-color: #fff;
+      }
+
+      .slideshow-card {
+        border-color: #d1bfff;
+        background-color: #fefcff;
       }
 
       .item-card:hover {
@@ -147,6 +224,23 @@ import { AdminService, GalleryImage } from '../../services/admin.service';
       .item-details {
         padding: 1rem;
         border-bottom: 1px solid #eee;
+      }
+
+      .slideshow-checkbox {
+        display: flex;
+        align-items: center;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px dotted #eee;
+      }
+
+      .slideshow-checkbox input {
+        margin-right: 0.5rem;
+      }
+
+      .slideshow-checkbox label {
+        font-size: 0.9rem;
+        color: #555;
       }
 
       .item-actions {
@@ -181,6 +275,15 @@ import { AdminService, GalleryImage } from '../../services/admin.service';
 
       .delete-btn:hover {
         background-color: #ffd4bc;
+      }
+
+      .remove-btn {
+        background-color: #f4e1d7;
+        color: #333;
+      }
+
+      .remove-btn:hover {
+        background-color: #f0cdb8;
       }
 
       .add-btn,
@@ -257,15 +360,20 @@ import { AdminService, GalleryImage } from '../../services/admin.service';
         gap: 0.5rem;
       }
 
-      /* Адаптивные стили для планшетов */
+      /* Responsive styles for tablets */
       @media (max-width: 768px) {
         .admin-panel {
           padding: 1.5rem;
         }
 
-        .items-grid {
+        .items-grid,
+        .slideshow-grid {
           grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
           gap: 1rem;
+        }
+
+        .slideshow-grid {
+          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         }
 
         .item-image {
@@ -283,7 +391,7 @@ import { AdminService, GalleryImage } from '../../services/admin.service';
         }
       }
 
-      /* Адаптивные стили для мобильных устройств */
+      /* Responsive styles for mobile devices */
       @media (max-width: 480px) {
         .admin-panel {
           padding: 1rem;
@@ -300,9 +408,18 @@ import { AdminService, GalleryImage } from '../../services/admin.service';
           margin: 1rem 0 0.8rem;
         }
 
+        .current-items,
+        .slideshow-selection {
+          padding: 1rem;
+        }
+
         .items-grid {
           grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
           gap: 0.8rem;
+        }
+
+        .slideshow-grid {
+          grid-template-columns: 1fr;
         }
 
         .item-image {
@@ -349,22 +466,73 @@ import { AdminService, GalleryImage } from '../../services/admin.service';
 })
 export class GalleryAdminComponent implements OnInit {
   galleryImages: GalleryImage[] = [];
+  slideshowImages: SlideImage[] = [];
   newImage: GalleryImage = { src: '', alt: '' };
   editingImage: GalleryImage = { src: '', alt: '' };
+  addToSlideshowOnCreate = false;
 
   isEditing = false;
   imagePreview: string | null = null;
   selectedFile: File | null = null;
 
-  constructor(private adminService: AdminService) {}
+  slideshowIds: string[] = [];
+
+  constructor(
+    private adminService: AdminService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {
     this.loadGallery();
+    this.loadSlideshow();
+    // Load ids for slideshow from server
+    this.adminService.getSlideshowIds().subscribe((ids) => {
+      this.slideshowIds = ids;
+      this.loadSlideshow();
+    });
   }
 
   loadGallery() {
     this.adminService.getGallery().subscribe((images) => {
       this.galleryImages = images;
+      // After loading the gallery — update slideshowIds
+      this.adminService.getSlideshowIds().subscribe((ids) => {
+        this.slideshowIds = ids;
+      });
+    });
+  }
+
+  loadSlideshow() {
+    this.adminService.getSlideshow().subscribe((slides) => {
+      this.slideshowImages = slides;
+    });
+  }
+
+  isInSlideshow(imageId?: string): boolean {
+    if (!imageId) return false;
+    return this.slideshowIds.includes(imageId);
+  }
+
+  toggleSlideshow(image: GalleryImage, event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      if (!this.slideshowIds.includes(image.id!)) {
+        this.slideshowIds.push(image.id!);
+        this.adminService.setSlideshowIds(this.slideshowIds).subscribe(() => {
+          this.loadGallery(); // update gallery and ids after change
+        });
+      }
+    } else {
+      this.slideshowIds = this.slideshowIds.filter((id) => id !== image.id);
+      this.adminService.setSlideshowIds(this.slideshowIds).subscribe(() => {
+        this.loadGallery(); // update gallery and ids after change
+      });
+    }
+  }
+
+  removeFromSlideshow(id: string) {
+    this.adminService.deleteSlide(id).subscribe(() => {
+      this.loadSlideshow();
     });
   }
 
@@ -373,7 +541,7 @@ export class GalleryAdminComponent implements OnInit {
     if (element.files && element.files.length > 0) {
       this.selectedFile = element.files[0];
 
-      // Создаем превью изображения
+      // Create image preview
       const reader = new FileReader();
       reader.onload = (e) => {
         this.imagePreview = e.target?.result as string;
@@ -384,24 +552,45 @@ export class GalleryAdminComponent implements OnInit {
 
   addImage() {
     if (!this.selectedFile || !this.newImage.alt) {
-      alert('Пожалуйста, заполните все поля и выберите изображение');
+      alert(this.translate.instant('ADMIN.GALLERY.FILL_ALL'));
       return;
     }
 
-    // В реальном приложении здесь был бы запрос на загрузку файла
-    // Сейчас имитируем загрузку
+    if (this.galleryImages.length >= 30) {
+      alert(this.translate.instant('ADMIN.GALLERY.LIMIT_GALLERY'));
+      return;
+    }
+
+    // Upload file to server
     this.adminService.uploadFile(this.selectedFile).subscribe((response) => {
       if (response.success) {
+        // Form the file path as assets/gallery/filename.ext
         const image: GalleryImage = {
-          src: response.filePath,
+          src: response.filePath, // Server returns the file path
           alt: this.newImage.alt,
         };
 
-        this.adminService.addImage(image).subscribe(() => {
+        this.adminService.addImage(image).subscribe((addedImage) => {
           this.resetForm();
           this.loadGallery();
-          alert('Изображение успешно добавлено');
+
+          // If need to add to slideshow
+          if (this.addToSlideshowOnCreate && this.slideshowImages.length < 10) {
+            const slide: SlideImage = {
+              id: addedImage.id,
+              image: addedImage.src,
+              alt: addedImage.alt,
+            };
+
+            this.adminService.addSlide(slide).subscribe(() => {
+              this.loadSlideshow();
+              this.resetForm();
+            });
+          }
         });
+      } else {
+        // Handle upload error
+        alert(response.error || 'Error uploading file');
       }
     });
   }
@@ -415,37 +604,67 @@ export class GalleryAdminComponent implements OnInit {
 
   saveEdit() {
     if (!this.editingImage.alt) {
-      alert('Пожалуйста, заполните описание');
+      alert(this.translate.instant('ADMIN.GALLERY.FILL_DESCRIPTION'));
       return;
     }
 
     if (this.selectedFile) {
-      // Если файл был выбран, загружаем его
+      // If a file was selected, upload it
       this.adminService.uploadFile(this.selectedFile).subscribe((response) => {
         if (response.success) {
           this.editingImage.src = response.filePath;
           this.updateImage();
+        } else {
+          // Handle upload error
+          alert(response.error || 'Error uploading file');
         }
       });
     } else {
-      // Если файл не был выбран, просто обновляем данные
+      // If no file was selected, just update the data
       this.updateImage();
     }
   }
 
   updateImage() {
     this.adminService.updateImage(this.editingImage).subscribe(() => {
-      this.cancelEdit();
-      this.loadGallery();
-      alert('Изображение успешно обновлено');
+      // If the image is in the slideshow, update it too
+      const slideshowImage = this.slideshowImages.find(
+        (slide) => slide.id === this.editingImage.id
+      );
+      if (slideshowImage) {
+        const updatedSlide: SlideImage = {
+          id: this.editingImage.id,
+          image: this.editingImage.src,
+          alt: this.editingImage.alt,
+        };
+
+        this.adminService.updateSlide(updatedSlide).subscribe(() => {
+          this.cancelEdit();
+          this.loadGallery();
+          this.loadSlideshow();
+        });
+      } else {
+        this.cancelEdit();
+        this.loadGallery();
+      }
     });
   }
 
   deleteImage(id: string) {
-    if (confirm('Вы уверены, что хотите удалить это изображение?')) {
+    if (confirm(this.translate.instant('ADMIN.GALLERY.DELETE_CONFIRM'))) {
+      // First, check if the image is in the slideshow
+      const inSlideshow = this.slideshowImages.some((slide) => slide.id === id);
+
+      // Remove from gallery
       this.adminService.deleteImage(id).subscribe(() => {
         this.loadGallery();
-        alert('Изображение успешно удалено');
+
+        // If the image was in the slideshow, remove it from there too
+        if (inSlideshow) {
+          this.adminService.deleteSlide(id).subscribe(() => {
+            this.loadSlideshow();
+          });
+        }
       });
     }
   }
@@ -461,5 +680,6 @@ export class GalleryAdminComponent implements OnInit {
     this.newImage = { src: '', alt: '' };
     this.imagePreview = null;
     this.selectedFile = null;
+    this.addToSlideshowOnCreate = false;
   }
 }

@@ -2,43 +2,50 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService, ContactInfo } from '../../services/admin.service';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contacts-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   template: `
     <div class="admin-panel">
-      <h2>Управление контактной информацией</h2>
+      <h2>{{ 'ADMIN.CONTACTS.TITLE' | translate }}</h2>
 
       <div class="current-content">
-        <h3>Текущие контакты</h3>
+        <h3>{{ 'ADMIN.CONTACTS.CURRENT_CONTACTS' | translate }}</h3>
         <div class="content-card">
           <div class="contact-item">
-            <strong>Email:</strong> {{ contactInfo.email }}
+            <strong>{{ 'ADMIN.CONTACTS.EMAIL' | translate }}</strong>
+            {{ contactInfo.email }}
           </div>
           <div class="contact-item">
-            <strong>Телефон:</strong> {{ contactInfo.phone }}
+            <strong>{{ 'ADMIN.CONTACTS.PHONE' | translate }}</strong>
+            {{ contactInfo.phone }}
           </div>
         </div>
       </div>
 
       <div class="edit-form">
-        <h3>Редактировать контакты</h3>
+        <h3>{{ 'ADMIN.CONTACTS.EDIT_CONTACTS' | translate }}</h3>
         <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" [(ngModel)]="editingInfo.email" />
+          <label for="edit-email">{{
+            'ADMIN.CONTACTS.EMAIL' | translate
+          }}</label>
+          <input type="email" id="edit-email" [(ngModel)]="editingInfo.email" />
         </div>
         <div class="form-group">
-          <label for="phone">Телефон:</label>
-          <input type="tel" id="phone" [(ngModel)]="editingInfo.phone" />
+          <label for="edit-phone">{{
+            'ADMIN.CONTACTS.PHONE' | translate
+          }}</label>
+          <input type="tel" id="edit-phone" [(ngModel)]="editingInfo.phone" />
         </div>
         <div class="form-actions">
-          <button class="action-btn save-btn" (click)="saveContacts()">
-            Сохранить
+          <button class="action-btn save-btn" (click)="updateContacts()">
+            {{ 'ADMIN.CONTACTS.UPDATE' | translate }}
           </button>
           <button class="action-btn cancel-btn" (click)="resetForm()">
-            Отмена
+            {{ 'ADMIN.CONTACTS.CANCEL' | translate }}
           </button>
         </div>
       </div>
@@ -183,7 +190,10 @@ export class ContactsAdminComponent implements OnInit {
   contactInfo: ContactInfo = { email: '', phone: '' };
   editingInfo: ContactInfo = { email: '', phone: '' };
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {
     this.loadContactInfo();
@@ -196,26 +206,15 @@ export class ContactsAdminComponent implements OnInit {
     });
   }
 
-  saveContacts() {
-    // Простая валидация email
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(this.editingInfo.email)) {
-      alert('Пожалуйста, введите корректный email');
+  updateContacts() {
+    if (!this.editingInfo.email || !this.editingInfo.phone) {
+      alert(this.translate.instant('ADMIN.GALLERY.FILL_ALL'));
       return;
     }
-
-    // Простая валидация телефона
-    if (!this.editingInfo.phone || this.editingInfo.phone.length < 6) {
-      alert('Пожалуйста, введите корректный номер телефона');
-      return;
-    }
-
-    this.adminService
-      .updateContactInfo(this.editingInfo)
-      .subscribe((updatedInfo) => {
-        this.contactInfo = updatedInfo;
-        alert('Контактная информация успешно обновлена');
-      });
+    this.adminService.updateContactInfo(this.editingInfo).subscribe(() => {
+      alert(this.translate.instant('ADMIN.CONTACTS.CONTACTS_UPDATED'));
+      this.contactInfo = { ...this.editingInfo };
+    });
   }
 
   resetForm() {

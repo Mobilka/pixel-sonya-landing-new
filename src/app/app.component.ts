@@ -9,5 +9,5 @@ import { RouterOutlet } from '@angular/router';
   styles: [],
 })
 export class AppComponent {
-  // Основной компонент теперь просто контейнер для маршрутизации
+  // The main component is now just a container for routing
 }

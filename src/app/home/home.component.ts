@@ -28,11 +28,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   title = 'Pixel Sonya';
 
   // Page titles based on language
-  pageTitles = {
-    en: 'Pixel Sonya Photography | Professional Photographer',
-    ru: 'Pixel Sonya Photography | Профессиональный Фотограф',
-    he: 'Pixel Sonya Photography | צלמת מקצועית',
-  };
+  pageTitles: { [key: string]: string } = {};
 
   // Supported languages
   langs = ['he', 'en', 'ru'];
@@ -51,33 +47,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   isGalleryOpen = false;
 
   // Slideshow data
-  slides = [
-    {
-      image: 'assets/Sonya.png',
-      alt: 'Portrait of Sonya',
-    },
-    {
-      image: 'assets/logo.png',
-      alt: 'Pixel Sonya Logo',
-    },
-    {
-      image: 'assets/Sonya.png', // Temporarily duplicated until we have more photos
-      alt: 'Sonya working',
-    },
-    {
-      image: 'assets/logo.png', // Temporarily duplicated until we have more photos
-      alt: 'Pixel Sonya Works',
-    },
-  ];
+  slides: any[] = [];
 
-  // For virtual scrolling demonstration, creating a large array of images
-  galleryImages = Array.from({ length: 100 }, (_, i) => {
-    const isEven = i % 2 === 0;
-    return {
-      src: isEven ? 'assets/Sonya.png' : 'assets/logo.png',
-      alt: `${isEven ? 'Sonya' : 'Logo'} - example ${i + 1}`,
-    };
-  });
+  // Gallery images
+  galleryImages: any[] = [];
 
   // Variables for gallery modal window
   selectedImage = '';
@@ -103,19 +76,34 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private adminService: AdminService
   ) {
     // Setting default language and available languages
-    translate.addLangs(this.langs);
-    translate.setDefaultLang('he');
-    translate.use('he');
+    this.langs = ['he', 'en', 'ru'];
+    this.translate.addLangs(this.langs);
+    this.translate.setDefaultLang('he');
+    this.translate.use('he');
 
     // Map URL initialization
     this.updateMapUrl('he');
 
     // Set initial page title
+    this.pageTitles = {
+      en:
+        this.translate.instant('HEADER.TITLE') +
+        ' ' +
+        this.translate.instant('HEADER.SUBTITLE'),
+      ru:
+        this.translate.instant('HEADER.TITLE') +
+        ' ' +
+        this.translate.instant('HEADER.SUBTITLE'),
+      he:
+        this.translate.instant('HEADER.TITLE') +
+        ' ' +
+        this.translate.instant('HEADER.SUBTITLE'),
+    };
     this.updatePageTitle('he');
   }
 
   ngOnInit() {
-    // Получаем данные из сервиса администратора
+    // Get data from admin service
     this.loadDataFromAdminService();
 
     // Automatic slide change every 5 seconds
@@ -133,31 +121,49 @@ export class HomeComponent implements OnInit, AfterViewInit {
     htmlTag.setAttribute('lang', this.currentLang);
   }
 
-  // Загрузка данных из сервиса администратора
+  // Loading data from admin service
   loadDataFromAdminService() {
-    // Загружаем данные слайдшоу
+    // Loading slideshow data
     this.adminService.getSlideshow().subscribe((slides) => {
-      if (slides.length > 0) {
+      console.log('Home: Slides loaded from service:', slides.length);
+      if (slides && slides.length > 0) {
         this.slides = slides.map((s) => ({
           image: s.image,
           alt: s.alt,
         }));
+        console.log(
+          'Home: Slides loaded into component, count:',
+          this.slides.length
+        );
+      } else {
+        console.log('Home: No data for slideshow');
+        this.slides = []; // Clear slideshow if there are no selected images
       }
     });
 
-    // Загружаем изображения для галереи
+    // Loading images for gallery
     this.adminService.getGallery().subscribe((images) => {
-      if (images.length > 0) {
+      console.log('Home: Images loaded for gallery:', images.length);
+      if (images && images.length > 0) {
         this.galleryImages = images.map((img) => ({
           src: img.src,
           alt: img.alt,
         }));
+        console.log(
+          'Home: Gallery loaded into component, count:',
+          this.galleryImages.length
+        );
+      } else {
+        console.log('Home: No data for gallery');
+        this.galleryImages = []; // Clear gallery if there are no images
       }
     });
 
-    // Загружаем контактную информацию
+    // Loading contact information
     this.adminService.getContactInfo().subscribe((info) => {
-      this.contactInfo = info;
+      if (info && (info.email || info.phone)) {
+        this.contactInfo = info;
+      }
     });
   }
 
