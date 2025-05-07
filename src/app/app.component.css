@@ -108,10 +108,10 @@ header {
   display: flex;
   align-items: center;
   z-index: 1000;
-  position: fixed; /* Фиксированный заголовок */
-  top: 0; /* Прикреплен к верху */
-  left: 0; /* Прикреплен к левому краю */
-  right: 0; /* Прикреплен к правому краю */
+  position: fixed; /* Fixed header */
+  top: 0; /* Attached to top */
+  left: 0; /* Attached to left edge */
+  right: 0; /* Attached to right edge */
 }
 
 nav {
@@ -121,16 +121,16 @@ nav {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
-  justify-content: space-between; /* Центрируем логотип */
+  justify-content: space-between; /* Center the logo */
 }
 
 /* Force navigation layout to be the same in all languages */
 [dir="rtl"] nav {
-  flex-direction: row !important; /* Явно переопределяем RTL направление */
+  flex-direction: row !important; /* Explicitly override RTL direction */
   justify-content: center !important;
 }
 
-/* Left navigation part - абсолютное позиционирование, чтобы всегда быть слева */
+/* Left navigation part - absolute positioning to always be on the left */
 .nav-left {
   display: flex;
   align-items: center;
@@ -140,16 +140,16 @@ nav {
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  /* Фиксированное положение слева */
-  left: 2rem !important;
-  right: auto !important;
+  /* Fixed position on the left */
+  left: 2rem !important; /* Always on the left */
+  right: auto !important; /* Not on the right */
 }
 
 /* Force same layout in RTL */
 [dir="rtl"] .nav-left {
-  left: 2rem !important; /* Всегда слева */
-  right: auto !important; /* Не справа */
-  /* Дополнительная фиксация */
+  left: 2rem !important; /* Always on the left */
+  right: auto !important; /* Not on the right */
+  /* Additional fixation */
   position: absolute !important;
   direction: ltr !important;
 }
@@ -159,7 +159,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%; /* Полная высота */
+  height: 100%; /* Full height */
   width: auto;
 }
 
@@ -226,7 +226,7 @@ nav {
   order: 3 !important;
 }
 
-/* Упрощаем кнопки переключателя языка */
+/* Simplify language switcher buttons */
 .language-switcher button {
   background-color: #f9f9f9;
   border: 1px solid #e0e0e0;
@@ -242,7 +242,7 @@ nav {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Явно удаляем любые неожиданные стили для кнопок в RTL */
+/* Explicitly remove any unexpected styles for buttons in RTL */
 [dir="rtl"] .nav-left .language-switcher button {
   margin: 0 !important;
   float: none !important;
@@ -279,7 +279,7 @@ nav {
   flex: 1;
   width: 100%;
   background-color: #fff;
-  margin-top: 100px; /* Отступ сверху равен высоте заголовка */
+  margin-top: 100px; /* Top margin equal to header height */
   padding-top: 0;
 }
 

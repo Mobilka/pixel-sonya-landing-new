@@ -1,1 +1,32 @@
-<p>gallery works!</p>
+<div class="gallery-container">
+  <div class="gallery-grid" *ngIf="galleryImages && galleryImages.length > 0">
+    <div class="gallery-item" *ngFor="let image of galleryImages">
+      <div class="gallery-image" (click)="openImageModal(image)">
+        <img
+          [src]="image.src"
+          [alt]="image.alt"
+          onerror="this.onerror=null; this.src='/assets/logo.png'; console.error('Image load error:', this.src);"
+        />
+        <div class="image-info">{{ image.alt }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-images" *ngIf="!galleryImages || galleryImages.length === 0">
+    <p>No images in gallery</p>
+  </div>
+</div>
+
+<!-- Modal window for viewing image -->
+<div class="image-modal" *ngIf="selectedImage" (click)="closeImageModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="close-button" (click)="closeImageModal()">×</button>
+    <img
+      [src]="selectedImage.src"
+      [alt]="selectedImage.alt"
+      onerror="this.onerror=null; this.src='/assets/logo.png';"
+    />
+    <p class="image-caption">{{ selectedImage.alt }}</p>
+    <p class="image-path">Path: {{ selectedImage.src }}</p>
+  </div>
+</div>

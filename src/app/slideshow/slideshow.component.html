@@ -1,1 +1,34 @@
-<p>slideshow works!</p>
+<div class="slideshow-container" *ngIf="slides && slides.length > 0">
+  <div class="slides">
+    <div
+      class="slide"
+      *ngFor="let slide of slides; let i = index"
+      [class.active]="i === currentSlide"
+    >
+      <img
+        [src]="slide.image"
+        [alt]="slide.alt"
+        onerror="this.onerror=null; this.src='/assets/logo.png'; console.error('Slideshow image load error:', this.src);"
+      />
+      <div class="slide-caption">{{ slide.alt }}</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="prev-btn" (click)="prevSlide()">&lt;</button>
+    <div class="dots">
+      <span
+        *ngFor="let slide of slides; let i = index"
+        class="dot"
+        [class.active]="i === currentSlide"
+        (click)="goToSlide(i)"
+      >
+      </span>
+    </div>
+    <button class="next-btn" (click)="nextSlide()">&gt;</button>
+  </div>
+</div>
+
+<div class="no-slides" *ngIf="!slides || slides.length === 0">
+  <p>No images for slideshow</p>
+</div>

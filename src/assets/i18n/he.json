@@ -1,6 +1,7 @@
 {
   "HEADER": {
-    "TITLE": "פיקסל סוניה"
+    "TITLE": "פיקסל סוניה",
+    "SUBTITLE": "צילום | צלמת מקצועית"
   },
   "HERO": {
     "TITLE": "הסיפור שלך בכל פיקסל",
@@ -64,5 +65,63 @@
     "HE": "עברית",
     "EN": "אנגלית",
     "RU": "רוסית"
+  },
+  "ADMIN": {
+    "TITLE": "לוח הבקרה",
+    "MENU": {
+      "PHOTOS": "תמונות",
+      "HERO_TEXT": "טקסט ראשי",
+      "CONTACTS": "פרטי קשר",
+      "BACK": "חזרה לאתר"
+    },
+    "GALLERY": {
+      "TITLE": "ניהול תמונות",
+      "SLIDESHOW": "תמונות למצגת (מקסימום 10)",
+      "SLIDESHOW_SELECTED": "נבחרו: {{count}} / 10",
+      "SLIDESHOW_EMPTY": "אין תמונות נבחרות למצגת. בחר מהגלריה למטה על ידי סימון 'הצג במצגת'",
+      "REMOVE_FROM_SLIDESHOW": "הסר מהמצגת",
+      "GALLERY_TITLE": "גלריה (מקסימום 30 תמונות)",
+      "TOTAL_PHOTOS": "סך הכל תמונות: {{count}} / 30",
+      "DESCRIPTION": "תיאור:",
+      "SHOW_IN_SLIDESHOW": "הצג במצגת",
+      "EDIT": "ערוך",
+      "DELETE": "מחק",
+      "ADD_NEW": "הוסף תמונה חדשה",
+      "IMAGE": "תמונה:",
+      "ADD_TO_SLIDESHOW": "הוסף למצגת",
+      "ADD_BUTTON": "הוסף תמונה",
+      "EDIT_IMAGE": "ערוך תמונה",
+      "SAVE": "שמור",
+      "CANCEL": "ביטול",
+      "PREVIEW": "תצוגה מקדימה",
+      "DELETE_CONFIRM": "האם אתה בטוח שברצונך למחוק תמונה זו? היא תימחק גם מהמצגת אם היא נכללת שם.",
+      "IMAGE_ADDED": "התמונה נוספה בהצלחה לגלריה",
+      "IMAGE_ADDED_SLIDESHOW": "התמונה נוספה בהצלחה לגלריה ולמצגת",
+      "IMAGE_UPDATED": "התמונה עודכנה בהצלחה",
+      "IMAGE_UPDATED_SLIDESHOW": "התמונה עודכנה בהצלחה בגלריה ובמצגת",
+      "IMAGE_DELETED": "התמונה נמחקה בהצלחה",
+      "IMAGE_DELETED_SLIDESHOW": "התמונה נמחקה בהצלחה מהגלריה ומהמצגת",
+      "FILL_ALL": "נא למלא את כל השדות ולבחור תמונה",
+      "FILL_DESCRIPTION": "נא למלא את התיאור",
+      "LIMIT_SLIDESHOW": "לא ניתן להוסיף יותר מ-10 תמונות למצגת",
+      "LIMIT_GALLERY": "הגעת למגבלת 30 תמונות בגלריה"
+    },
+    "HERO": {
+      "TITLE": "ניהול טקסט ראשי",
+      "CURRENT_TEXT": "טקסט נוכחי",
+      "EDIT_TITLE": "כותרת:",
+      "EDIT_DESCRIPTION": "תיאור:",
+      "UPDATE": "עדכן טקסט",
+      "HERO_UPDATED": "הטקסט הראשי עודכן בהצלחה"
+    },
+    "CONTACTS": {
+      "TITLE": "ניהול פרטי קשר",
+      "CURRENT_CONTACTS": "פרטי קשר נוכחיים",
+      "EMAIL": "דואר אלקטרוני:",
+      "PHONE": "טלפון:",
+      "EDIT_CONTACTS": "עריכת פרטי קשר",
+      "UPDATE": "עדכן פרטי קשר",
+      "CONTACTS_UPDATED": "פרטי הקשר עודכנו בהצלחה"
+    }
   }
 } 

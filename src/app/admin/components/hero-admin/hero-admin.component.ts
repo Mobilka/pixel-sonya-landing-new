@@ -2,17 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService, HeroContent } from '../../services/admin.service';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-hero-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   template: `
     <div class="admin-panel">
-      <h2>Управление текстом в главной секции</h2>
+      <h2>{{ 'ADMIN.HERO.TITLE' | translate }}</h2>
 
-      <div class="current-content">
-        <h3>Текущий текст</h3>
+      <div class="current-hero">
+        <h3>{{ 'ADMIN.HERO.CURRENT_TEXT' | translate }}</h3>
         <div class="content-card">
           <h4>{{ heroContent.title }}</h4>
           <p>{{ heroContent.description }}</p>
@@ -20,27 +21,25 @@ import { AdminService, HeroContent } from '../../services/admin.service';
       </div>
 
       <div class="edit-form">
-        <h3>Редактировать текст</h3>
+        <h3>{{ 'ADMIN.HERO.TITLE' | translate }}</h3>
         <div class="form-group">
-          <label for="title">Заголовок:</label>
-          <input type="text" id="title" [(ngModel)]="editingContent.title" />
+          <label for="edit-title">{{
+            'ADMIN.HERO.EDIT_TITLE' | translate
+          }}</label>
+          <input type="text" id="edit-title" [(ngModel)]="editHero.title" />
         </div>
         <div class="form-group">
-          <label for="description">Описание:</label>
+          <label for="edit-description">{{
+            'ADMIN.HERO.EDIT_DESCRIPTION' | translate
+          }}</label>
           <textarea
-            id="description"
-            [(ngModel)]="editingContent.description"
-            rows="5"
+            id="edit-description"
+            [(ngModel)]="editHero.description"
           ></textarea>
         </div>
-        <div class="form-actions">
-          <button class="action-btn save-btn" (click)="saveContent()">
-            Сохранить
-          </button>
-          <button class="action-btn cancel-btn" (click)="resetForm()">
-            Отмена
-          </button>
-        </div>
+        <button class="action-btn save-btn" (click)="updateHero()">
+          {{ 'ADMIN.HERO.UPDATE' | translate }}
+        </button>
       </div>
     </div>
   `,
@@ -65,7 +64,7 @@ import { AdminService, HeroContent } from '../../services/admin.service';
         color: #555;
       }
 
-      .current-content {
+      .current-hero {
         margin-bottom: 2rem;
       }
 
@@ -190,8 +189,12 @@ import { AdminService, HeroContent } from '../../services/admin.service';
 export class HeroAdminComponent implements OnInit {
   heroContent: HeroContent = { title: '', description: '' };
   editingContent: HeroContent = { title: '', description: '' };
+  editHero: HeroContent = { title: '', description: '' };
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {
     this.loadHeroContent();
@@ -204,18 +207,15 @@ export class HeroAdminComponent implements OnInit {
     });
   }
 
-  saveContent() {
-    if (!this.editingContent.title || !this.editingContent.description) {
-      alert('Пожалуйста, заполните все поля');
+  updateHero() {
+    if (!this.editHero.title || !this.editHero.description) {
+      alert(this.translate.instant('ADMIN.GALLERY.FILL_ALL'));
       return;
     }
-
-    this.adminService
-      .updateHeroContent(this.editingContent)
-      .subscribe((updatedContent) => {
-        this.heroContent = updatedContent;
-        alert('Содержимое успешно обновлено');
-      });
+    this.adminService.updateHeroContent(this.editHero).subscribe(() => {
+      alert(this.translate.instant('ADMIN.HERO.HERO_UPDATED'));
+      this.heroContent = { ...this.editHero };
+    });
   }
 
   resetForm() {

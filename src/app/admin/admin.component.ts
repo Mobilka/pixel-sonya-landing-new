@@ -1,15 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    TranslateModule,
+  ],
   template: `
     <div class="admin-container">
       <header class="admin-header">
-        <h1>Панель Администратора</h1>
+        <h1>{{ 'ADMIN.TITLE' | translate }}</h1>
         <button class="menu-toggle" (click)="toggleMenu()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -28,18 +35,21 @@ import { CommonModule } from '@angular/common';
           </svg>
         </button>
         <div class="admin-nav" [class.nav-open]="menuOpen">
-          <a routerLink="/admin/slideshow" routerLinkActive="active"
-            >Слайдшоу</a
-          >
-          <a routerLink="/admin/gallery" routerLinkActive="active">Галерея</a>
-          <a routerLink="/admin/hero" routerLinkActive="active"
-            >Главный текст</a
-          >
-          <a routerLink="/admin/contacts" routerLinkActive="active">Контакты</a>
-          <a routerLink="/" class="back-link">На сайт</a>
+          <a routerLink="/admin/gallery" routerLinkActive="active">
+            {{ 'ADMIN.MENU.PHOTOS' | translate }}
+          </a>
+          <a routerLink="/admin/hero" routerLinkActive="active">
+            {{ 'ADMIN.MENU.HERO_TEXT' | translate }}
+          </a>
+          <a routerLink="/admin/contacts" routerLinkActive="active">
+            {{ 'ADMIN.MENU.CONTACTS' | translate }}
+          </a>
+          <a routerLink="/" class="back-link">
+            {{ 'ADMIN.MENU.BACK' | translate }}
+          </a>
         </div>
       </header>
-      <main class="admin-content">
+      <main class="admin-content" dir="rtl">
         <router-outlet></router-outlet>
       </main>
     </div>
@@ -51,6 +61,7 @@ import { CommonModule } from '@angular/common';
         flex-direction: column;
         min-height: 100vh;
         background-color: #f5f5f5;
+        font-family: 'Heebo', Arial, sans-serif;
       }
 
       .admin-header {
@@ -69,6 +80,7 @@ import { CommonModule } from '@angular/common';
       .admin-header h1 {
         margin: 0;
         font-size: 1.8rem;
+        text-align: right;
       }
 
       .menu-toggle {
@@ -78,6 +90,8 @@ import { CommonModule } from '@angular/common';
         cursor: pointer;
         padding: 0.5rem;
         color: #333;
+        position: absolute;
+        left: 1rem;
       }
 
       .admin-nav {
@@ -85,6 +99,7 @@ import { CommonModule } from '@angular/common';
         gap: 1rem;
         margin-top: 1rem;
         width: 100%;
+        justify-content: flex-end;
       }
 
       .admin-nav a {
@@ -109,7 +124,8 @@ import { CommonModule } from '@angular/common';
       }
 
       .admin-nav .back-link {
-        margin-left: auto;
+        margin-right: auto;
+        margin-left: 0;
         background-color: #e9e3ff;
         border-color: #d1bfff;
       }
@@ -123,7 +139,7 @@ import { CommonModule } from '@angular/common';
         flex: 1;
       }
 
-      /* Стили для мобильных устройств */
+      /* Mobile device styles */
       @media (max-width: 768px) {
         .admin-header {
           padding: 1rem;
@@ -134,13 +150,15 @@ import { CommonModule } from '@angular/common';
         .admin-header h1 {
           font-size: 1.5rem;
           margin-bottom: 0.5rem;
+          width: 100%;
+          text-align: right;
         }
 
         .menu-toggle {
           display: block;
           position: absolute;
           top: 1rem;
-          right: 1rem;
+          left: 1rem;
         }
 
         .admin-nav {
@@ -151,6 +169,7 @@ import { CommonModule } from '@angular/common';
           overflow: hidden;
           transition: height 0.3s ease;
           margin-top: 0;
+          align-items: flex-end;
         }
 
         .admin-nav.nav-open {
@@ -160,12 +179,13 @@ import { CommonModule } from '@angular/common';
 
         .admin-nav a {
           width: 100%;
-          text-align: center;
+          text-align: right;
         }
 
         .admin-nav .back-link {
-          margin-left: 0;
+          margin-right: 0;
           margin-top: 1rem;
+          text-align: right;
         }
 
         .admin-content {
@@ -173,7 +193,7 @@ import { CommonModule } from '@angular/common';
         }
       }
 
-      /* Стили для маленьких экранов (телефоны) */
+      /* Small screen styles (phones) */
       @media (max-width: 480px) {
         .admin-header h1 {
           font-size: 1.3rem;
@@ -186,8 +206,15 @@ import { CommonModule } from '@angular/common';
     `,
   ],
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit {
   menuOpen = false;
+
+  constructor(private translate: TranslateService) {}
+
+  ngOnInit() {
+    // Set Hebrew as the default language
+    this.translate.use('he');
+  }
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;

@@ -1,6 +1,7 @@
 {
   "HEADER": {
-    "TITLE": "Pixel Sonya"
+    "TITLE": "Pixel Sonya",
+    "SUBTITLE": "Photography | Professional Photographer"
   },
   "HERO": {
     "TITLE": "Your story in every pixel",
@@ -64,5 +65,62 @@
     "HE": "Hebrew",
     "EN": "English",
     "RU": "Russian"
+  },
+  "ADMIN": {
+    "TITLE": "Admin Panel",
+    "MENU": {
+      "PHOTOS": "Photos",
+      "HERO_TEXT": "Hero Text",
+      "CONTACTS": "Contacts",
+      "BACK": "Back to Site"
+    },
+    "GALLERY": {
+      "TITLE": "Photo Management",
+      "SLIDESHOW": "Slideshow Photos (maximum 10)",
+      "SLIDESHOW_SELECTED": "Selected: {count} / 10",
+      "SLIDESHOW_EMPTY": "No photos selected for slideshow. Choose from the gallery below by marking 'Show in slideshow'",
+      "REMOVE_FROM_SLIDESHOW": "Remove from slideshow",
+      "GALLERY_TITLE": "Gallery (maximum 30 photos)",
+      "TOTAL_PHOTOS": "Total photos: {count} / 30",
+      "DESCRIPTION": "Description:",
+      "SHOW_IN_SLIDESHOW": "Show in slideshow",
+      "EDIT": "Edit",
+      "DELETE": "Delete",
+      "ADD_NEW": "Add new photo",
+      "IMAGE": "Image:",
+      "ADD_TO_SLIDESHOW": "Add to slideshow",
+      "ADD_BUTTON": "Add photo",
+      "EDIT_IMAGE": "Edit photo",
+      "SAVE": "Save",
+      "CANCEL": "Cancel",
+      "PREVIEW": "Preview",
+      "DELETE_CONFIRM": "Are you sure you want to delete this photo? It will also be removed from the slideshow if it's included there.",
+      "IMAGE_ADDED": "Photo successfully added to gallery",
+      "IMAGE_ADDED_SLIDESHOW": "Photo successfully added to gallery and slideshow",
+      "IMAGE_UPDATED": "Photo successfully updated",
+      "IMAGE_UPDATED_SLIDESHOW": "Photo successfully updated in gallery and slideshow",
+      "IMAGE_DELETED": "Photo successfully deleted",
+      "IMAGE_DELETED_SLIDESHOW": "Photo successfully deleted from gallery and slideshow",
+      "FILL_ALL": "Please fill in all fields and select an image",
+      "FILL_DESCRIPTION": "Please fill in the description",
+      "LIMIT_SLIDESHOW": "Cannot add more than 10 photos to slideshow",
+      "LIMIT_GALLERY": "You have reached the limit of 30 photos in the gallery"
+    },
+    "HERO": {
+      "TITLE": "Hero Text Management",
+      "CURRENT_TEXT": "Current Text",
+      "EDIT_TITLE": "Title:",
+      "EDIT_DESCRIPTION": "Description:",
+      "UPDATE": "Update Text",
+      "HERO_UPDATED": "Hero text successfully updated"
+    },
+    "CONTACTS": {
+      "TITLE": "Contact Information Management",
+      "CURRENT_CONTACTS": "Current Contact Information",
+      "EMAIL": "Email:",
+      "PHONE": "Phone:",
+      "UPDATE": "Update Contacts",
+      "CONTACTS_UPDATED": "Contact information successfully updated"
+    }
   }
 } 

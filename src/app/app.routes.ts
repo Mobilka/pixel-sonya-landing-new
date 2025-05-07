@@ -10,6 +10,6 @@ export const routes: Routes = [
     path: 'admin',
     loadChildren: () =>
       import('./admin/admin.routes').then((m) => m.ADMIN_ROUTES),
-    // TODO: Добавить защиту маршрута с помощью AuthGuard
+    // TODO: Add route protection using AuthGuard
   },
 ];
