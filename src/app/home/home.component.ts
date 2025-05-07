@@ -83,23 +83,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     // Map URL initialization
     this.updateMapUrl('he');
-
-    // Set initial page title
-    this.pageTitles = {
-      en:
-        this.translate.instant('HEADER.TITLE') +
-        ' ' +
-        this.translate.instant('HEADER.SUBTITLE'),
-      ru:
-        this.translate.instant('HEADER.TITLE') +
-        ' ' +
-        this.translate.instant('HEADER.SUBTITLE'),
-      he:
-        this.translate.instant('HEADER.TITLE') +
-        ' ' +
-        this.translate.instant('HEADER.SUBTITLE'),
-    };
-    this.updatePageTitle('he');
   }
 
   ngOnInit() {
@@ -119,6 +102,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     // Setting lang attribute on html tag
     htmlTag.setAttribute('lang', this.currentLang);
+
+    // Новый вызов для инициализации pageTitles
+    this.setPageTitles();
+  }
+
+  setPageTitles() {
+    this.translate
+      .get(['HEADER.TITLE', 'HEADER.SUBTITLE'])
+      .subscribe((translations) => {
+        this.pageTitles = {
+          en: `${translations['HEADER.TITLE']} ${translations['HEADER.SUBTITLE']}`,
+          ru: `${translations['HEADER.TITLE']} ${translations['HEADER.SUBTITLE']}`,
+          he: `${translations['HEADER.TITLE']} ${translations['HEADER.SUBTITLE']}`,
+        };
+        this.updatePageTitle(this.currentLang);
+      });
   }
 
   // Loading data from admin service
@@ -199,8 +198,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // Updating map URL when changing language
     this.updateMapUrl(lang);
 
-    // Update the page title
-    this.updatePageTitle(lang);
+    // Новый вызов для обновления pageTitles
+    this.setPageTitles();
 
     // Setting text direction (RTL for Hebrew)
     const htmlTag = document.getElementsByTagName('html')[0] as HTMLHtmlElement;

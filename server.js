@@ -31,6 +31,11 @@ const upload = multer({ storage: storage });
 app.use('/assets', express.static(path.join(__dirname, 'src/assets')));
 app.use('/src/assets', express.static(path.join(__dirname, 'src/assets')));
 
+app.use(express.static(path.join(__dirname, 'dist/pixel-sonya-landing-new')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/pixel-sonya-landing-new/index.html'));
+});
+
 // Route for file uploads
 app.post('/api/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
@@ -93,8 +98,8 @@ app.post('/api/slideshow', express.json(), (req, res) => {
   });
 });
 
-// Port setup - start with 3002
-const PORT = process.env.PORT || 3002;
+// Port setup - start with 4200
+const PORT = process.env.PORT || 4200;
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 }).on('error', (err) => {
