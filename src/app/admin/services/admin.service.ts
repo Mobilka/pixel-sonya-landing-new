@@ -63,7 +63,7 @@ export class AdminService {
 
   private tempContacts: ContactInfo = {
     email: 'pixelsonya@gmail.com',
-    phone: '+972 052 728 4388',
+    phone: '0526937074',
   };
 
   constructor(private http: HttpClient) {

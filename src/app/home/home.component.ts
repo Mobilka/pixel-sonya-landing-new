@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // Adding contact information
   contactInfo = {
     email: 'pixelsonya@gmail.com',
-    phone: '+972 052 728 4388',
+    phone: '0526937074',
   };
 
   // Flag for displaying gallery
